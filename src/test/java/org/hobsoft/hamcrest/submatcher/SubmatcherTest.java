@@ -13,6 +13,7 @@
  */
 package org.hobsoft.hamcrest.submatcher;
 
+import org.hamcrest.Matcher;
 import org.hobsoft.hamcrest.submatcher.Submatcher.InvocationInfo;
 import org.hobsoft.hamcrest.submatcher.test.Name;
 import org.hobsoft.hamcrest.submatcher.test.Person;
@@ -20,6 +21,7 @@ import org.junit.Test;
 
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.CoreMatchers.is;
+import static org.hobsoft.hamcrest.submatcher.Submatcher.such;
 import static org.hobsoft.hamcrest.submatcher.Submatcher.that;
 import static org.junit.Assert.assertThat;
 
@@ -31,6 +33,14 @@ public class SubmatcherTest
 	// ----------------------------------------------------------------------------------------------------------------
 	// tests
 	// ----------------------------------------------------------------------------------------------------------------
+	
+	@Test
+	public void suchReturnsMatcher()
+	{
+		Matcher<?> actual = such(null, null);
+		
+		assertThat(actual, is(instanceOf(Matcher.class)));
+	}
 
 	@Test
 	public void thatWithClassReturnsInstance()

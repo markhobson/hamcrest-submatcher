@@ -16,6 +16,7 @@ package org.hobsoft.hamcrest.submatcher;
 import java.lang.reflect.Method;
 
 import org.hamcrest.Description;
+import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
 import org.objenesis.Objenesis;
 import org.objenesis.ObjenesisStd;
@@ -108,6 +109,11 @@ public class Submatcher<T> extends TypeSafeMatcher<T>
 	// public methods
 	// ----------------------------------------------------------------------------------------------------------------
 
+	public static <T, U> Submatcher<T> such(U actual, Matcher<U> matcher)
+	{
+		return new Submatcher<T>();
+	}
+	
 	public static <U> U that(Class<U> type)
 	{
 		return proxy(type, new SubmatcherMethodInterceptor());
