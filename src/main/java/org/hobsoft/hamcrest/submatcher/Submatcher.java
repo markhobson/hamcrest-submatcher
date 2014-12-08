@@ -43,18 +43,45 @@ public class Submatcher<T> extends TypeSafeMatcher<T>
 	 */
 	public interface InvocationInfo
 	{
-		// no properties
+		// ------------------------------------------------------------------------------------------------------------
+		// public methods
+		// ------------------------------------------------------------------------------------------------------------
+
+		Method getInvokedMethod();
 	}
 
-	private static class SubmatcherMethodInterceptor implements MethodInterceptor
+	private static class SubmatcherMethodInterceptor implements MethodInterceptor, InvocationInfo
 	{
+		// ------------------------------------------------------------------------------------------------------------
+		// fields
+		// ------------------------------------------------------------------------------------------------------------
+
+		private Method invokedMethod;
+
 		// ------------------------------------------------------------------------------------------------------------
 		// MethodInterceptor methods
 		// ------------------------------------------------------------------------------------------------------------
 
 		public Object intercept(Object obj, Method method, Object[] args, MethodProxy proxy)
+			throws NoSuchMethodException
 		{
+			if (InvocationInfo.class.getMethod("getInvokedMethod").equals(method))
+			{
+				return getInvokedMethod();
+			}
+			
+			invokedMethod = method;
+			
 			return proxy(method.getReturnType(), this);
+		}
+		
+		// ------------------------------------------------------------------------------------------------------------
+		// InvocationInfo method
+		// ------------------------------------------------------------------------------------------------------------
+
+		public Method getInvokedMethod()
+		{
+			return invokedMethod;
 		}
 	}
 

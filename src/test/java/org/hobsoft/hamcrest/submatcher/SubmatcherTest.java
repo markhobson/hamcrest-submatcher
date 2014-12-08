@@ -55,4 +55,12 @@ public class SubmatcherTest
 		
 		assertThat(actual, is(instanceOf(InvocationInfo.class)));
 	}
+	
+	@Test
+	public void thatWithClassThenMethodReturnsInvocationInfoWithMethod() throws NoSuchMethodException
+	{
+		InvocationInfo actual = (InvocationInfo) that(Person.class).getName();
+		
+		assertThat(actual.getInvokedMethod(), is(Person.class.getMethod("getName")));
+	}
 }
