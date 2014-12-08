@@ -125,4 +125,22 @@ public class SubmatcherTest
 		
 		assertThat(actual.getInvokedMethod(), is(Person.class.getMethod("getName")));
 	}
+	
+	@Test
+	public void suchThatMatchesWhenMatchesReturnsTrue()
+	{
+		Name name = new Name("x");
+		
+		Matcher<Person> actual = such(that(Person.class).getName(), is(name));
+		
+		assertThat(actual.matches(new Person(name)), is(true));
+	}
+	
+	@Test
+	public void suchThatMatchesWhenDoesNotMatchReturnsFalse()
+	{
+		Matcher<Person> actual = such(that(Person.class).getName(), is(new Name("x")));
+		
+		assertThat(actual.matches(new Person(new Name("y"))), is(false));
+	}
 }
