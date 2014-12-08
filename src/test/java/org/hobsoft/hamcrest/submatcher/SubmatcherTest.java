@@ -13,6 +13,7 @@
  */
 package org.hobsoft.hamcrest.submatcher;
 
+import org.hobsoft.hamcrest.submatcher.Submatcher.InvocationInfo;
 import org.hobsoft.hamcrest.submatcher.test.Name;
 import org.hobsoft.hamcrest.submatcher.test.Person;
 import org.junit.Test;
@@ -45,5 +46,13 @@ public class SubmatcherTest
 		Name actual = that(Person.class).getName();
 		
 		assertThat(actual, is(instanceOf(Name.class)));
+	}
+	
+	@Test
+	public void thatWithClassThenMethodReturnsInvocationInfo()
+	{
+		Name actual = that(Person.class).getName();
+		
+		assertThat(actual, is(instanceOf(InvocationInfo.class)));
 	}
 }

@@ -37,6 +37,14 @@ public class Submatcher<T> extends TypeSafeMatcher<T>
 	// ----------------------------------------------------------------------------------------------------------------
 	// types
 	// ----------------------------------------------------------------------------------------------------------------
+	
+	/**
+	 * Provides details about the invoked proxy method.
+	 */
+	public interface InvocationInfo
+	{
+		// no properties
+	}
 
 	private static class SubmatcherMethodInterceptor implements MethodInterceptor
 	{
@@ -86,6 +94,7 @@ public class Submatcher<T> extends TypeSafeMatcher<T>
 	{
 		Enhancer enhancer = new Enhancer();
 		enhancer.setSuperclass(type);
+		enhancer.setInterfaces(new Class<?>[] {InvocationInfo.class});
 		enhancer.setCallbackType(MethodInterceptor.class);
 		Class<?> proxyType = enhancer.createClass();
 		
