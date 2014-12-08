@@ -124,9 +124,7 @@ public class Submatcher<T> extends TypeSafeMatcher<T>
 			throw new AssertionError();
 		}
 		
-		matcher.matches(subactual);
-		
-		return false;
+		return matcher.matches(subactual);
 	}
 
 	// ----------------------------------------------------------------------------------------------------------------

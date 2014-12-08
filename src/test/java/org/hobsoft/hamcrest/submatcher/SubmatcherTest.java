@@ -24,6 +24,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hobsoft.hamcrest.submatcher.Submatcher.such;
 import static org.hobsoft.hamcrest.submatcher.Submatcher.that;
 import static org.junit.Assert.assertThat;
+import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -65,6 +66,32 @@ public class SubmatcherTest
 		such(invocationInfo, matcher).matches(new Person(name));
 
 		verify(matcher).matches(name);
+	}
+	
+	@Test
+	public void suchMatchesWhenMatchesReturnsTrue() throws NoSuchMethodException
+	{
+		NameInvocationInfo invocationInfo = mock(NameInvocationInfo.class);
+		when(invocationInfo.getInvokedMethod()).thenReturn(Person.class.getMethod("getName"));
+		Matcher<Name> matcher = mock(Matcher.class);
+		when(matcher.matches(any())).thenReturn(true);
+		
+		boolean actual = such(invocationInfo, matcher).matches(new Person());
+		
+		assertThat(actual, is(true));
+	}
+	
+	@Test
+	public void suchMatchesWhenDoesNotMatchReturnsFalse() throws NoSuchMethodException
+	{
+		NameInvocationInfo invocationInfo = mock(NameInvocationInfo.class);
+		when(invocationInfo.getInvokedMethod()).thenReturn(Person.class.getMethod("getName"));
+		Matcher<Name> matcher = mock(Matcher.class);
+		when(matcher.matches(any())).thenReturn(false);
+		
+		boolean actual = such(invocationInfo, matcher).matches(new Person());
+		
+		assertThat(actual, is(false));
 	}
 
 	@Test

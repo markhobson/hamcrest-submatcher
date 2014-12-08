@@ -28,6 +28,11 @@ public class Person
 	// constructors
 	// ----------------------------------------------------------------------------------------------------------------
 	
+	public Person()
+	{
+		this(new Name());
+	}
+
 	public Person(Name name)
 	{
 		setName(name);
