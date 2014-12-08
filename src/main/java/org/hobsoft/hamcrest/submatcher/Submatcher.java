@@ -13,10 +13,18 @@
  */
 package org.hobsoft.hamcrest.submatcher;
 
+import java.lang.reflect.Method;
+
 import org.hamcrest.Description;
 import org.hamcrest.TypeSafeMatcher;
 import org.objenesis.Objenesis;
 import org.objenesis.ObjenesisStd;
+
+import net.sf.cglib.proxy.Callback;
+import net.sf.cglib.proxy.Enhancer;
+import net.sf.cglib.proxy.Factory;
+import net.sf.cglib.proxy.MethodInterceptor;
+import net.sf.cglib.proxy.MethodProxy;
 
 /**
  * Matcher for a sub-property of an instance.
@@ -26,6 +34,22 @@ import org.objenesis.ObjenesisStd;
  */
 public class Submatcher<T> extends TypeSafeMatcher<T>
 {
+	// ----------------------------------------------------------------------------------------------------------------
+	// types
+	// ----------------------------------------------------------------------------------------------------------------
+
+	private static class SubmatcherMethodInterceptor implements MethodInterceptor
+	{
+		// ------------------------------------------------------------------------------------------------------------
+		// MethodInterceptor methods
+		// ------------------------------------------------------------------------------------------------------------
+
+		public Object intercept(Object obj, Method method, Object[] args, MethodProxy proxy)
+		{
+			return proxy(method.getReturnType(), this);
+		}
+	}
+
 	// ----------------------------------------------------------------------------------------------------------------
 	// TypeSafeMatcher methods
 	// ----------------------------------------------------------------------------------------------------------------
@@ -51,7 +75,24 @@ public class Submatcher<T> extends TypeSafeMatcher<T>
 
 	public static <U> U that(Class<U> type)
 	{
+		return proxy(type, new SubmatcherMethodInterceptor());
+	}
+	
+	// ----------------------------------------------------------------------------------------------------------------
+	// private methods
+	// ----------------------------------------------------------------------------------------------------------------
+
+	private static <U> U proxy(Class<U> type, MethodInterceptor interceptor)
+	{
+		Enhancer enhancer = new Enhancer();
+		enhancer.setSuperclass(type);
+		enhancer.setCallbackType(MethodInterceptor.class);
+		Class<?> proxyType = enhancer.createClass();
+		
 		Objenesis objenesis = new ObjenesisStd();
-		return objenesis.newInstance(type);
+		Factory proxy = (Factory) objenesis.newInstance(proxyType);
+		proxy.setCallbacks(new Callback[] {interceptor});
+		
+		return type.cast(proxy);
 	}
 }
