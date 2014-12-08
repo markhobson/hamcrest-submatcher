@@ -85,14 +85,47 @@ public class Submatcher<T> extends TypeSafeMatcher<T>
 			return invokedMethod;
 		}
 	}
+	
+	// ----------------------------------------------------------------------------------------------------------------
+	// fields
+	// ----------------------------------------------------------------------------------------------------------------
+
+	private final InvocationInfo invocationInfo;
+	
+	private final Matcher<?> matcher;
+
+	// ----------------------------------------------------------------------------------------------------------------
+	// constructors
+	// ----------------------------------------------------------------------------------------------------------------
+
+	public Submatcher(InvocationInfo invocationInfo, Matcher<?> matcher)
+	{
+		this.invocationInfo = invocationInfo;
+		this.matcher = matcher;
+	}
 
 	// ----------------------------------------------------------------------------------------------------------------
 	// TypeSafeMatcher methods
 	// ----------------------------------------------------------------------------------------------------------------
 
 	@Override
-	protected boolean matchesSafely(T item)
+	protected boolean matchesSafely(T actual)
 	{
+		Method invokedMethod = invocationInfo.getInvokedMethod();
+		
+		Object subactual;
+		try
+		{
+			subactual = invokedMethod.invoke(actual);
+		}
+		catch (Exception exception)
+		{
+			// TODO: handle
+			throw new AssertionError();
+		}
+		
+		matcher.matches(subactual);
+		
 		return false;
 	}
 
@@ -111,7 +144,9 @@ public class Submatcher<T> extends TypeSafeMatcher<T>
 
 	public static <T, U> Submatcher<T> such(U actual, Matcher<U> matcher)
 	{
-		return new Submatcher<T>();
+		InvocationInfo invocationInfo = (InvocationInfo) actual;
+		
+		return new Submatcher<T>(invocationInfo, matcher);
 	}
 	
 	public static <U> U that(Class<U> type)

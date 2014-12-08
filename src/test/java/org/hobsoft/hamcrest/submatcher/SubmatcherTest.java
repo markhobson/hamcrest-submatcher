@@ -24,12 +24,24 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hobsoft.hamcrest.submatcher.Submatcher.such;
 import static org.hobsoft.hamcrest.submatcher.Submatcher.that;
 import static org.junit.Assert.assertThat;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 /**
  * Tests {@code Submatcher}.
  */
 public class SubmatcherTest
 {
+	// ----------------------------------------------------------------------------------------------------------------
+	// types
+	// ----------------------------------------------------------------------------------------------------------------
+
+	private abstract static class NameInvocationInfo extends Name implements InvocationInfo
+	{
+		// simple subtype
+	}
+
 	// ----------------------------------------------------------------------------------------------------------------
 	// tests
 	// ----------------------------------------------------------------------------------------------------------------
@@ -40,6 +52,19 @@ public class SubmatcherTest
 		Matcher<?> actual = such(null, null);
 		
 		assertThat(actual, is(instanceOf(Matcher.class)));
+	}
+	
+	@Test
+	public void suchMatchesInvokesSubmatcher() throws NoSuchMethodException
+	{
+		NameInvocationInfo invocationInfo = mock(NameInvocationInfo.class);
+		when(invocationInfo.getInvokedMethod()).thenReturn(Person.class.getMethod("getName"));
+		Matcher<Name> matcher = mock(Matcher.class);
+		Name name = new Name("x");
+		
+		such(invocationInfo, matcher).matches(new Person(name));
+
+		verify(matcher).matches(name);
 	}
 
 	@Test
