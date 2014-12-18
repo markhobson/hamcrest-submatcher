@@ -14,7 +14,6 @@
 package org.hobsoft.hamcrest.submatcher;
 
 import org.hamcrest.Matcher;
-import org.hobsoft.hamcrest.submatcher.Submatcher.SubmatcherMethodInterceptor;
 import org.hobsoft.hamcrest.submatcher.test.Name;
 import org.hobsoft.hamcrest.submatcher.test.Person;
 import org.junit.Test;

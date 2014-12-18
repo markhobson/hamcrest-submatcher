@@ -25,7 +25,6 @@ import net.sf.cglib.proxy.Callback;
 import net.sf.cglib.proxy.Enhancer;
 import net.sf.cglib.proxy.Factory;
 import net.sf.cglib.proxy.MethodInterceptor;
-import net.sf.cglib.proxy.MethodProxy;
 
 /**
  * Matcher for a sub-property of an instance.
@@ -35,45 +34,6 @@ import net.sf.cglib.proxy.MethodProxy;
  */
 public class Submatcher<T> extends TypeSafeMatcher<T>
 {
-	// ----------------------------------------------------------------------------------------------------------------
-	// types
-	// ----------------------------------------------------------------------------------------------------------------
-	
-	static class SubmatcherMethodInterceptor implements MethodInterceptor
-	{
-		// ------------------------------------------------------------------------------------------------------------
-		// fields
-		// ------------------------------------------------------------------------------------------------------------
-
-		private static Method invokedMethod;
-
-		// ------------------------------------------------------------------------------------------------------------
-		// MethodInterceptor methods
-		// ------------------------------------------------------------------------------------------------------------
-
-		public Object intercept(Object obj, Method method, Object[] args, MethodProxy proxy)
-			throws NoSuchMethodException
-		{
-			setInvokedMethod(method);
-			
-			return null;
-		}
-		
-		// ------------------------------------------------------------------------------------------------------------
-		// public methods
-		// ------------------------------------------------------------------------------------------------------------
-
-		public static Method getInvokedMethod()
-		{
-			return invokedMethod;
-		}
-
-		public static void setInvokedMethod(Method invokedMethod)
-		{
-			SubmatcherMethodInterceptor.invokedMethod = invokedMethod;
-		}
-	}
-	
 	// ----------------------------------------------------------------------------------------------------------------
 	// fields
 	// ----------------------------------------------------------------------------------------------------------------
