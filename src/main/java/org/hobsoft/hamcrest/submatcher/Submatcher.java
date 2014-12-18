@@ -39,25 +39,13 @@ public class Submatcher<T> extends TypeSafeMatcher<T>
 	// types
 	// ----------------------------------------------------------------------------------------------------------------
 	
-	/**
-	 * Provides details about the invoked proxy method.
-	 */
-	public interface InvocationInfo
-	{
-		// ------------------------------------------------------------------------------------------------------------
-		// public methods
-		// ------------------------------------------------------------------------------------------------------------
-
-		Method getInvokedMethod();
-	}
-
-	private static class SubmatcherMethodInterceptor implements MethodInterceptor, InvocationInfo
+	static class SubmatcherMethodInterceptor implements MethodInterceptor
 	{
 		// ------------------------------------------------------------------------------------------------------------
 		// fields
 		// ------------------------------------------------------------------------------------------------------------
 
-		private Method invokedMethod;
+		private static Method invokedMethod;
 
 		// ------------------------------------------------------------------------------------------------------------
 		// MethodInterceptor methods
@@ -66,23 +54,23 @@ public class Submatcher<T> extends TypeSafeMatcher<T>
 		public Object intercept(Object obj, Method method, Object[] args, MethodProxy proxy)
 			throws NoSuchMethodException
 		{
-			if (InvocationInfo.class.getMethod("getInvokedMethod").equals(method))
-			{
-				return getInvokedMethod();
-			}
+			setInvokedMethod(method);
 			
-			invokedMethod = method;
-			
-			return proxy(method.getReturnType(), this);
+			return null;
 		}
 		
 		// ------------------------------------------------------------------------------------------------------------
-		// InvocationInfo method
+		// public methods
 		// ------------------------------------------------------------------------------------------------------------
 
-		public Method getInvokedMethod()
+		public static Method getInvokedMethod()
 		{
 			return invokedMethod;
+		}
+
+		public static void setInvokedMethod(Method invokedMethod)
+		{
+			SubmatcherMethodInterceptor.invokedMethod = invokedMethod;
 		}
 	}
 	
@@ -90,7 +78,7 @@ public class Submatcher<T> extends TypeSafeMatcher<T>
 	// fields
 	// ----------------------------------------------------------------------------------------------------------------
 
-	private final InvocationInfo invocationInfo;
+	private final Method invokedMethod;
 	
 	private final Matcher<?> matcher;
 
@@ -98,9 +86,9 @@ public class Submatcher<T> extends TypeSafeMatcher<T>
 	// constructors
 	// ----------------------------------------------------------------------------------------------------------------
 
-	public Submatcher(InvocationInfo invocationInfo, Matcher<?> matcher)
+	public Submatcher(Method invokedMethod, Matcher<?> matcher)
 	{
-		this.invocationInfo = invocationInfo;
+		this.invokedMethod = invokedMethod;
 		this.matcher = matcher;
 	}
 
@@ -111,8 +99,6 @@ public class Submatcher<T> extends TypeSafeMatcher<T>
 	@Override
 	protected boolean matchesSafely(T actual)
 	{
-		Method invokedMethod = invocationInfo.getInvokedMethod();
-		
 		Object subactual;
 		try
 		{
@@ -142,9 +128,7 @@ public class Submatcher<T> extends TypeSafeMatcher<T>
 
 	public static <T, U> Submatcher<T> such(U actual, Matcher<U> matcher)
 	{
-		InvocationInfo invocationInfo = (InvocationInfo) actual;
-		
-		return new Submatcher<T>(invocationInfo, matcher);
+		return new Submatcher<T>(SubmatcherMethodInterceptor.getInvokedMethod(), matcher);
 	}
 	
 	public static <U> U that(Class<U> type)
@@ -160,7 +144,6 @@ public class Submatcher<T> extends TypeSafeMatcher<T>
 	{
 		Enhancer enhancer = new Enhancer();
 		enhancer.setSuperclass(type);
-		enhancer.setInterfaces(new Class<?>[] {InvocationInfo.class});
 		enhancer.setCallbackType(MethodInterceptor.class);
 		Class<?> proxyType = enhancer.createClass();
 		

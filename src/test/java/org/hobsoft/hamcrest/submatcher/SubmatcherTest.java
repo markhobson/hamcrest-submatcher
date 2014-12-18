@@ -14,13 +14,14 @@
 package org.hobsoft.hamcrest.submatcher;
 
 import org.hamcrest.Matcher;
-import org.hobsoft.hamcrest.submatcher.Submatcher.InvocationInfo;
+import org.hobsoft.hamcrest.submatcher.Submatcher.SubmatcherMethodInterceptor;
 import org.hobsoft.hamcrest.submatcher.test.Name;
 import org.hobsoft.hamcrest.submatcher.test.Person;
 import org.junit.Test;
 
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hobsoft.hamcrest.submatcher.Submatcher.such;
 import static org.hobsoft.hamcrest.submatcher.Submatcher.that;
 import static org.junit.Assert.assertThat;
@@ -34,15 +35,6 @@ import static org.mockito.Mockito.when;
  */
 public class SubmatcherTest
 {
-	// ----------------------------------------------------------------------------------------------------------------
-	// types
-	// ----------------------------------------------------------------------------------------------------------------
-
-	private abstract static class NameInvocationInfo extends Name implements InvocationInfo
-	{
-		// simple subtype
-	}
-
 	// ----------------------------------------------------------------------------------------------------------------
 	// tests
 	// ----------------------------------------------------------------------------------------------------------------
@@ -58,12 +50,11 @@ public class SubmatcherTest
 	@Test
 	public void suchMatchesInvokesSubmatcher() throws NoSuchMethodException
 	{
-		NameInvocationInfo invocationInfo = mock(NameInvocationInfo.class);
-		when(invocationInfo.getInvokedMethod()).thenReturn(Person.class.getMethod("getName"));
+		SubmatcherMethodInterceptor.setInvokedMethod(Person.class.getMethod("getName"));
 		Matcher<Name> matcher = mock(Matcher.class);
 		Name name = new Name("x");
 		
-		such(invocationInfo, matcher).matches(new Person(name));
+		such(null, matcher).matches(new Person(name));
 
 		verify(matcher).matches(name);
 	}
@@ -71,12 +62,11 @@ public class SubmatcherTest
 	@Test
 	public void suchMatchesWhenMatchesReturnsTrue() throws NoSuchMethodException
 	{
-		NameInvocationInfo invocationInfo = mock(NameInvocationInfo.class);
-		when(invocationInfo.getInvokedMethod()).thenReturn(Person.class.getMethod("getName"));
+		SubmatcherMethodInterceptor.setInvokedMethod(Person.class.getMethod("getName"));
 		Matcher<Name> matcher = mock(Matcher.class);
 		when(matcher.matches(any())).thenReturn(true);
 		
-		boolean actual = such(invocationInfo, matcher).matches(new Person());
+		boolean actual = such(null, matcher).matches(new Person());
 		
 		assertThat(actual, is(true));
 	}
@@ -84,12 +74,11 @@ public class SubmatcherTest
 	@Test
 	public void suchMatchesWhenDoesNotMatchReturnsFalse() throws NoSuchMethodException
 	{
-		NameInvocationInfo invocationInfo = mock(NameInvocationInfo.class);
-		when(invocationInfo.getInvokedMethod()).thenReturn(Person.class.getMethod("getName"));
+		SubmatcherMethodInterceptor.setInvokedMethod(Person.class.getMethod("getName"));
 		Matcher<Name> matcher = mock(Matcher.class);
 		when(matcher.matches(any())).thenReturn(false);
 		
-		boolean actual = such(invocationInfo, matcher).matches(new Person());
+		boolean actual = such(null, matcher).matches(new Person());
 		
 		assertThat(actual, is(false));
 	}
@@ -103,27 +92,19 @@ public class SubmatcherTest
 	}
 	
 	@Test
-	public void thatWithClassThenMethodReturnsInstance()
+	public void thatWithClassThenMethodReturnsNull()
 	{
 		Name actual = that(Person.class).getName();
 		
-		assertThat(actual, is(instanceOf(Name.class)));
+		assertThat(actual, is(nullValue()));
 	}
 	
 	@Test
-	public void thatWithClassThenMethodReturnsInvocationInfo()
+	public void thatWithClassThenMethodSetsInvokedMethod() throws NoSuchMethodException
 	{
-		Name actual = that(Person.class).getName();
+		that(Person.class).getName();
 		
-		assertThat(actual, is(instanceOf(InvocationInfo.class)));
-	}
-	
-	@Test
-	public void thatWithClassThenMethodReturnsInvocationInfoWithMethod() throws NoSuchMethodException
-	{
-		InvocationInfo actual = (InvocationInfo) that(Person.class).getName();
-		
-		assertThat(actual.getInvokedMethod(), is(Person.class.getMethod("getName")));
+		assertThat(SubmatcherMethodInterceptor.getInvokedMethod(), is(Person.class.getMethod("getName")));
 	}
 	
 	@Test

@@ -24,8 +24,3 @@ Nested sub-properties:
 	)));
 
 Note that the use of the outer `is()` is syntactic sugar and can be omitted.
-
-Limitations
------------
-
-* Currently final sub-property types cannot be matched (i.e. String, Integer, etc.)
