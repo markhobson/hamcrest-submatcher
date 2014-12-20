@@ -13,20 +13,12 @@
  */
 package org.hobsoft.hamcrest.submatcher;
 
-import org.hamcrest.CoreMatchers;
-import org.hobsoft.hamcrest.submatcher.test.Name;
 import org.hobsoft.hamcrest.submatcher.test.Person;
 import org.junit.Test;
-
-import net.sf.cglib.proxy.MethodInterceptor;
-import net.sf.cglib.proxy.MethodProxy;
 
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
-import static org.mockito.Matchers.argThat;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
 
 /**
  * Tests {@code Spy}.
@@ -40,25 +32,18 @@ public class SpyTest
 	@Test
 	public void createReturnsInstance()
 	{
-		Person actual = new Spy<Person>(Person.class, null).create();
+		Person actual = new Spy<Person>(Person.class).create();
 		
 		assertThat(actual, is(instanceOf(Person.class)));
 	}
 
 	@Test
-	// SUPPRESS CHECKSTYLE IllegalThrows
-	public void createReturnsInstanceWithInterceptor() throws Throwable
+	public void createReturnsSpy() throws NoSuchMethodException
 	{
-		MethodInterceptor interceptor = mock(MethodInterceptor.class);
-		Name name = new Name("x");
+		Spy<Person> spy = new Spy<Person>(Person.class);
 		
-		new Spy<Person>(Person.class, interceptor).create().setName(name);
+		spy.create().getName();
 		
-		verify(interceptor).intercept(
-			argThat(is(instanceOf(Person.class))),
-			argThat(is(Person.class.getMethod("setName", Name.class))),
-			argThat(is(new Object[] {name})),
-			argThat(is(CoreMatchers.<MethodProxy>instanceOf(MethodProxy.class)))
-		);
+		assertThat(spy.getInvokedMethod(), is(Person.class.getMethod("getName")));
 	}
 }

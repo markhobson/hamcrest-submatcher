@@ -13,6 +13,8 @@
  */
 package org.hobsoft.hamcrest.submatcher;
 
+import java.lang.reflect.Method;
+
 import org.objenesis.Objenesis;
 import org.objenesis.ObjenesisStd;
 
@@ -20,11 +22,12 @@ import net.sf.cglib.proxy.Callback;
 import net.sf.cglib.proxy.Enhancer;
 import net.sf.cglib.proxy.Factory;
 import net.sf.cglib.proxy.MethodInterceptor;
+import net.sf.cglib.proxy.MethodProxy;
 
 /**
- * Factory for proxied instances.
+ * Factory for proxies that record their method invocations.
  */
-class Spy<T>
+class Spy<T> implements MethodInterceptor
 {
 	// ----------------------------------------------------------------------------------------------------------------
 	// fields
@@ -32,16 +35,26 @@ class Spy<T>
 
 	private final Class<T> type;
 	
-	private final MethodInterceptor interceptor;
+	private Method invokedMethod;
 
 	// ----------------------------------------------------------------------------------------------------------------
 	// constructors
 	// ----------------------------------------------------------------------------------------------------------------
 
-	public Spy(Class<T> type, MethodInterceptor interceptor)
+	public Spy(Class<T> type)
 	{
 		this.type = type;
-		this.interceptor = interceptor;
+	}
+	
+	// ----------------------------------------------------------------------------------------------------------------
+	// MethodInterceptor methods
+	// ----------------------------------------------------------------------------------------------------------------
+
+	public Object intercept(Object obj, Method method, Object[] args, MethodProxy proxy)
+	{
+		invokedMethod = method;
+		
+		return null;
 	}
 	
 	// ----------------------------------------------------------------------------------------------------------------
@@ -57,8 +70,13 @@ class Spy<T>
 		
 		Objenesis objenesis = new ObjenesisStd();
 		Factory proxy = (Factory) objenesis.newInstance(proxyType);
-		proxy.setCallbacks(new Callback[] {interceptor});
+		proxy.setCallbacks(new Callback[] {this});
 		
 		return type.cast(proxy);
+	}
+	
+	public Method getInvokedMethod()
+	{
+		return invokedMethod;
 	}
 }

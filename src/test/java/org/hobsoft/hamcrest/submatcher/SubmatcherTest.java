@@ -13,9 +13,12 @@
  */
 package org.hobsoft.hamcrest.submatcher;
 
+import java.lang.reflect.Method;
+
 import org.hamcrest.Matcher;
 import org.hobsoft.hamcrest.submatcher.test.Name;
 import org.hobsoft.hamcrest.submatcher.test.Person;
+import org.junit.Before;
 import org.junit.Test;
 
 import static org.hamcrest.CoreMatchers.instanceOf;
@@ -35,12 +38,24 @@ import static org.mockito.Mockito.when;
 public class SubmatcherTest
 {
 	// ----------------------------------------------------------------------------------------------------------------
+	// JUnit methods
+	// ----------------------------------------------------------------------------------------------------------------
+
+	@Before
+	public void setUp()
+	{
+		Submatcher.setSpy(null);
+	}
+
+	// ----------------------------------------------------------------------------------------------------------------
 	// tests
 	// ----------------------------------------------------------------------------------------------------------------
 	
 	@Test
-	public void suchReturnsMatcher()
+	public void suchReturnsMatcher() throws NoSuchMethodException
 	{
+		Submatcher.setSpy(mockSpy());
+		
 		Matcher<?> actual = such(null, null);
 		
 		assertThat(actual, is(instanceOf(Matcher.class)));
@@ -49,7 +64,7 @@ public class SubmatcherTest
 	@Test
 	public void suchMatchesInvokesSubmatcher() throws NoSuchMethodException
 	{
-		SubmatcherMethodInterceptor.setInvokedMethod(Person.class.getMethod("getName"));
+		Submatcher.setSpy(mockSpy(Person.class.getMethod("getName")));
 		Matcher<Name> matcher = mock(Matcher.class);
 		Name name = new Name("x");
 		
@@ -61,7 +76,7 @@ public class SubmatcherTest
 	@Test
 	public void suchMatchesWhenMatchesReturnsTrue() throws NoSuchMethodException
 	{
-		SubmatcherMethodInterceptor.setInvokedMethod(Person.class.getMethod("getName"));
+		Submatcher.setSpy(mockSpy(Person.class.getMethod("getName")));
 		Matcher<Name> matcher = mock(Matcher.class);
 		when(matcher.matches(any())).thenReturn(true);
 		
@@ -73,7 +88,7 @@ public class SubmatcherTest
 	@Test
 	public void suchMatchesWhenDoesNotMatchReturnsFalse() throws NoSuchMethodException
 	{
-		SubmatcherMethodInterceptor.setInvokedMethod(Person.class.getMethod("getName"));
+		Submatcher.setSpy(mockSpy(Person.class.getMethod("getName")));
 		Matcher<Name> matcher = mock(Matcher.class);
 		when(matcher.matches(any())).thenReturn(false);
 		
@@ -103,7 +118,7 @@ public class SubmatcherTest
 	{
 		that(Person.class).getName();
 		
-		assertThat(SubmatcherMethodInterceptor.getInvokedMethod(), is(Person.class.getMethod("getName")));
+		assertThat(Submatcher.getSpy().getInvokedMethod(), is(Person.class.getMethod("getName")));
 	}
 	
 	@Test
@@ -122,5 +137,21 @@ public class SubmatcherTest
 		Matcher<Person> actual = such(that(Person.class).getName(), is(new Name("x")));
 		
 		assertThat(actual.matches(new Person(new Name("y"))), is(false));
+	}
+
+	// ----------------------------------------------------------------------------------------------------------------
+	// private methods
+	// ----------------------------------------------------------------------------------------------------------------
+
+	private static Spy<?> mockSpy() throws NoSuchMethodException
+	{
+		return mockSpy(Person.class.getMethod("getName"));
+	}
+
+	private static Spy<Person> mockSpy(Method invokedMethod)
+	{
+		Spy<Person> spy = mock(Spy.class);
+		when(spy.getInvokedMethod()).thenReturn(invokedMethod);
+		return spy;
 	}
 }
