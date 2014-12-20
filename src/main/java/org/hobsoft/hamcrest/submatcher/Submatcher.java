@@ -18,13 +18,6 @@ import java.lang.reflect.Method;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
-import org.objenesis.Objenesis;
-import org.objenesis.ObjenesisStd;
-
-import net.sf.cglib.proxy.Callback;
-import net.sf.cglib.proxy.Enhancer;
-import net.sf.cglib.proxy.Factory;
-import net.sf.cglib.proxy.MethodInterceptor;
 
 /**
  * Matcher for a sub-property of an instance.
@@ -93,24 +86,6 @@ public class Submatcher<T> extends TypeSafeMatcher<T>
 	
 	public static <U> U that(Class<U> type)
 	{
-		return proxy(type, new SubmatcherMethodInterceptor());
-	}
-	
-	// ----------------------------------------------------------------------------------------------------------------
-	// private methods
-	// ----------------------------------------------------------------------------------------------------------------
-
-	private static <U> U proxy(Class<U> type, MethodInterceptor interceptor)
-	{
-		Enhancer enhancer = new Enhancer();
-		enhancer.setSuperclass(type);
-		enhancer.setCallbackType(MethodInterceptor.class);
-		Class<?> proxyType = enhancer.createClass();
-		
-		Objenesis objenesis = new ObjenesisStd();
-		Factory proxy = (Factory) objenesis.newInstance(proxyType);
-		proxy.setCallbacks(new Callback[] {interceptor});
-		
-		return type.cast(proxy);
+		return new Spy<U>(type, new SubmatcherMethodInterceptor()).create();
 	}
 }
