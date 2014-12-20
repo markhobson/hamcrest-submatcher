@@ -15,7 +15,9 @@ package org.hobsoft.hamcrest.submatcher;
 
 import org.hamcrest.CoreMatchers;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
@@ -26,6 +28,12 @@ import static org.mockito.Mockito.mock;
 public class SpyHolderTest
 {
 	// ----------------------------------------------------------------------------------------------------------------
+	// fields
+	// ----------------------------------------------------------------------------------------------------------------
+
+	private ExpectedException thrown = ExpectedException.none();
+
+	// ----------------------------------------------------------------------------------------------------------------
 	// JUnit methods
 	// ----------------------------------------------------------------------------------------------------------------
 
@@ -35,9 +43,24 @@ public class SpyHolderTest
 		SpyHolder.setSpy(null);
 	}
 
+	@Rule
+	public ExpectedException getThrown()
+	{
+		return thrown;
+	}
+
 	// ----------------------------------------------------------------------------------------------------------------
 	// tests
 	// ----------------------------------------------------------------------------------------------------------------
+	
+	@Test
+	public void getSpyWhenUnsetThrowsException()
+	{
+		thrown.expect(IllegalStateException.class);
+		thrown.expectMessage("Spy has not been set");
+		
+		SpyHolder.getSpy();
+	}
 
 	@Test
 	public void setSpySetsProperty()

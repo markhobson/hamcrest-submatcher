@@ -39,6 +39,11 @@ final class SpyHolder
 
 	public static Spy<?> getSpy()
 	{
+		if (spy == null)
+		{
+			throw new IllegalStateException("Spy has not been set");
+		}
+		
 		return spy;
 	}
 
