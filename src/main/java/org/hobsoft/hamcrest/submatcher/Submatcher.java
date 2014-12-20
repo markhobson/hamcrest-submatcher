@@ -31,8 +31,6 @@ public class Submatcher<T> extends TypeSafeMatcher<T>
 	// fields
 	// ----------------------------------------------------------------------------------------------------------------
 
-	private static Spy<?> spy;
-	
 	private final Method invokedMethod;
 	
 	private final Matcher<?> matcher;
@@ -83,30 +81,14 @@ public class Submatcher<T> extends TypeSafeMatcher<T>
 
 	public static <T, U> Submatcher<T> such(U actual, Matcher<U> matcher)
 	{
-		return new Submatcher<T>(getSpy().getInvokedMethod(), matcher);
+		return new Submatcher<T>(SpyHolder.getSpy().getInvokedMethod(), matcher);
 	}
 	
 	public static <U> U that(Class<U> type)
 	{
 		Spy<U> spy = new Spy<U>(type);
-		setSpy(spy);
+		SpyHolder.setSpy(spy);
 		
 		return spy.create();
-	}
-	
-	// ----------------------------------------------------------------------------------------------------------------
-	// package methods
-	// ----------------------------------------------------------------------------------------------------------------
-
-	// @VisibleForTesting
-	static Spy<?> getSpy()
-	{
-		return spy;
-	}
-
-	// @VisibleForTesting
-	static void setSpy(Spy<?> spy)
-	{
-		Submatcher.spy = spy;
 	}
 }
