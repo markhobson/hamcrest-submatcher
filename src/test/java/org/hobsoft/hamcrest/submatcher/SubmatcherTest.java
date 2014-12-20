@@ -18,7 +18,7 @@ import java.lang.reflect.Method;
 import org.hamcrest.Matcher;
 import org.hobsoft.hamcrest.submatcher.test.Name;
 import org.hobsoft.hamcrest.submatcher.test.Person;
-import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 
 import static org.hamcrest.CoreMatchers.instanceOf;
@@ -38,13 +38,19 @@ import static org.mockito.Mockito.when;
 public class SubmatcherTest
 {
 	// ----------------------------------------------------------------------------------------------------------------
+	// fields
+	// ----------------------------------------------------------------------------------------------------------------
+
+	private SpyHolderRule spyHolderRule = new SpyHolderRule();
+
+	// ----------------------------------------------------------------------------------------------------------------
 	// JUnit methods
 	// ----------------------------------------------------------------------------------------------------------------
 
-	@Before
-	public void setUp()
+	@Rule
+	public SpyHolderRule getSpyHolderRule()
 	{
-		SpyHolder.setSpy(null);
+		return spyHolderRule;
 	}
 
 	// ----------------------------------------------------------------------------------------------------------------

@@ -14,7 +14,6 @@
 package org.hobsoft.hamcrest.submatcher;
 
 import org.hamcrest.CoreMatchers;
-import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -31,16 +30,18 @@ public class SpyHolderTest
 	// fields
 	// ----------------------------------------------------------------------------------------------------------------
 
+	private SpyHolderRule spyHolderRule = new SpyHolderRule();
+	
 	private ExpectedException thrown = ExpectedException.none();
 
 	// ----------------------------------------------------------------------------------------------------------------
 	// JUnit methods
 	// ----------------------------------------------------------------------------------------------------------------
 
-	@Before
-	public void setUp()
+	@Rule
+	public SpyHolderRule getSpyHolderRule()
 	{
-		SpyHolder.setSpy(null);
+		return spyHolderRule;
 	}
 
 	@Rule
