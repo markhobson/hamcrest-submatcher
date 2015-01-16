@@ -135,7 +135,7 @@ public class SubmatcherTest
 	public void suchReturnsSubmatcherWithMatcher() throws NoSuchMethodException
 	{
 		SpyHolder.setSpy(mockSpy());
-		Matcher<Object> matcher = mock(Matcher.class);
+		Matcher<?> matcher = mock(Matcher.class);
 		
 		Submatcher<?> actual = such(null, matcher);
 		
