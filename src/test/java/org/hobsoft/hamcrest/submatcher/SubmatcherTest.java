@@ -76,37 +76,37 @@ public class SubmatcherTest
 	}
 	
 	@Test
-	public void matchesInvokesSubmatcher() throws NoSuchMethodException
+	public void matchesSafelyInvokesSubmatcher() throws NoSuchMethodException
 	{
 		Matcher<Name> matcher = mock(Matcher.class);
 		Submatcher<Person> submatcher = new Submatcher<Person>(Person.class.getMethod("getName"), matcher);
 		Name name = new Name("x");
 		
-		submatcher.matches(new Person(name));
+		submatcher.matchesSafely(new Person(name));
 
 		verify(matcher).matches(name);
 	}
 	
 	@Test
-	public void matchesWhenMatchesReturnsTrue() throws NoSuchMethodException
+	public void matchesSafelyWhenMatchesReturnsTrue() throws NoSuchMethodException
 	{
 		Matcher<Name> matcher = mock(Matcher.class);
 		when(matcher.matches(any())).thenReturn(true);
 		Submatcher<Person> submatcher = new Submatcher<Person>(Person.class.getMethod("getName"), matcher);
 		
-		boolean actual = submatcher.matches(new Person());
+		boolean actual = submatcher.matchesSafely(new Person());
 		
 		assertThat(actual, is(true));
 	}
 	
 	@Test
-	public void matchesWhenDoesNotMatchReturnsFalse() throws NoSuchMethodException
+	public void matchesSafelyWhenDoesNotMatchReturnsFalse() throws NoSuchMethodException
 	{
 		Matcher<Name> matcher = mock(Matcher.class);
 		when(matcher.matches(any())).thenReturn(false);
 		Submatcher<Person> submatcher = new Submatcher<Person>(Person.class.getMethod("getName"), matcher);
 		
-		boolean actual = submatcher.matches(new Person());
+		boolean actual = submatcher.matchesSafely(new Person());
 		
 		assertThat(actual, is(false));
 	}
