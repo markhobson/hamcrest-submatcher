@@ -78,37 +78,37 @@ public class SubmatcherTest
 	}
 	
 	@Test
-	public void suchMatchesInvokesSubmatcher() throws NoSuchMethodException
+	public void matchesInvokesSubmatcher() throws NoSuchMethodException
 	{
-		SpyHolder.setSpy(mockSpy(Person.class.getMethod("getName")));
 		Matcher<Name> matcher = mock(Matcher.class);
+		Submatcher<Person> submatcher = new Submatcher<Person>(Person.class.getMethod("getName"), matcher);
 		Name name = new Name("x");
 		
-		such(null, matcher).matches(new Person(name));
+		submatcher.matches(new Person(name));
 
 		verify(matcher).matches(name);
 	}
 	
 	@Test
-	public void suchMatchesWhenMatchesReturnsTrue() throws NoSuchMethodException
+	public void matchesWhenMatchesReturnsTrue() throws NoSuchMethodException
 	{
-		SpyHolder.setSpy(mockSpy(Person.class.getMethod("getName")));
 		Matcher<Name> matcher = mock(Matcher.class);
 		when(matcher.matches(any())).thenReturn(true);
+		Submatcher<Person> submatcher = new Submatcher<Person>(Person.class.getMethod("getName"), matcher);
 		
-		boolean actual = such(null, matcher).matches(new Person());
+		boolean actual = submatcher.matches(new Person());
 		
 		assertThat(actual, is(true));
 	}
 	
 	@Test
-	public void suchMatchesWhenDoesNotMatchReturnsFalse() throws NoSuchMethodException
+	public void matchesWhenDoesNotMatchReturnsFalse() throws NoSuchMethodException
 	{
-		SpyHolder.setSpy(mockSpy(Person.class.getMethod("getName")));
 		Matcher<Name> matcher = mock(Matcher.class);
 		when(matcher.matches(any())).thenReturn(false);
+		Submatcher<Person> submatcher = new Submatcher<Person>(Person.class.getMethod("getName"), matcher);
 		
-		boolean actual = such(null, matcher).matches(new Person());
+		boolean actual = submatcher.matches(new Person());
 		
 		assertThat(actual, is(false));
 	}
