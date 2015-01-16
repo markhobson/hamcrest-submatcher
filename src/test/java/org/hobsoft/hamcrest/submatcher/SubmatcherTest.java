@@ -15,12 +15,16 @@ package org.hobsoft.hamcrest.submatcher;
 
 import java.lang.reflect.Method;
 
+import org.hamcrest.Description;
 import org.hamcrest.Matcher;
+import org.hamcrest.StringDescription;
 import org.hobsoft.hamcrest.submatcher.test.Name;
 import org.hobsoft.hamcrest.submatcher.test.Person;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
 
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.CoreMatchers.is;
@@ -29,6 +33,7 @@ import static org.hobsoft.hamcrest.submatcher.Submatcher.such;
 import static org.hobsoft.hamcrest.submatcher.Submatcher.that;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -140,6 +145,19 @@ public class SubmatcherTest
 	}
 	
 	@Test
+	public void describeToAppendsDescription() throws NoSuchMethodException
+	{
+		Matcher<?> matcher = mock(Matcher.class);
+		doAnswer(appendText("x")).when(matcher).describeTo(any(Description.class));
+		Submatcher<Person> submatcher = new Submatcher<Person>(Person.class.getMethod("getName"), matcher);
+		StringDescription description = new StringDescription();
+		
+		submatcher.describeTo(description);
+		
+		assertThat(description.toString(), is("such that getName() x"));
+	}
+
+	@Test
 	public void suchReturnsSubmatcher() throws NoSuchMethodException
 	{
 		SpyHolder.setSpy(mockSpy());
@@ -231,5 +249,18 @@ public class SubmatcherTest
 		Spy<Person> spy = mock(Spy.class);
 		when(spy.getInvokedMethod()).thenReturn(invokedMethod);
 		return spy;
+	}
+
+	private static Answer<Object> appendText(final String text)
+	{
+		return new Answer<Object>()
+		{
+			public Object answer(InvocationOnMock invocation)
+			{
+				Description description = invocation.getArgumentAt(0, Description.class);
+				description.appendText(text);
+				return null;
+			}
+		};
 	}
 }
