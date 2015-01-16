@@ -39,7 +39,7 @@ public class Submatcher<T> extends TypeSafeMatcher<T>
 	// constructors
 	// ----------------------------------------------------------------------------------------------------------------
 
-	public Submatcher(Method invokedMethod, Matcher<?> matcher)
+	Submatcher(Method invokedMethod, Matcher<?> matcher)
 	{
 		this.invokedMethod = invokedMethod;
 		this.matcher = matcher;
