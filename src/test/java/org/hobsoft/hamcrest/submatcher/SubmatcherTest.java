@@ -20,6 +20,7 @@ import org.hobsoft.hamcrest.submatcher.test.Name;
 import org.hobsoft.hamcrest.submatcher.test.Person;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.CoreMatchers.is;
@@ -42,6 +43,8 @@ public class SubmatcherTest
 	// ----------------------------------------------------------------------------------------------------------------
 
 	private SpyHolderRule spyHolderRule = new SpyHolderRule();
+	
+	private ExpectedException thrown = ExpectedException.none();
 
 	// ----------------------------------------------------------------------------------------------------------------
 	// JUnit methods
@@ -53,6 +56,12 @@ public class SubmatcherTest
 		return spyHolderRule;
 	}
 
+	@Rule
+	public ExpectedException getThrown()
+	{
+		return thrown;
+	}
+
 	// ----------------------------------------------------------------------------------------------------------------
 	// tests
 	// ----------------------------------------------------------------------------------------------------------------
@@ -60,7 +69,7 @@ public class SubmatcherTest
 	@Test
 	public void constructorSetsInvokedMethod() throws NoSuchMethodException
 	{
-		Submatcher<Person> actual = new Submatcher<Person>(Person.class.getMethod("getName"), null);
+		Submatcher<Person> actual = new Submatcher<Person>(Person.class.getMethod("getName"), mock(Matcher.class));
 		
 		assertThat(actual.getInvokedMethod(), is(Person.class.getMethod("getName")));
 	}
@@ -73,6 +82,15 @@ public class SubmatcherTest
 		Submatcher<?> actual = new Submatcher<Object>(null, matcher);
 		
 		assertThat(actual.getMatcher(), is((Object) matcher));
+	}
+	
+	@Test
+	public void constructorWithNullMatcherThrowsException()
+	{
+		thrown.expect(NullPointerException.class);
+		thrown.expectMessage("matcher");
+		
+		new Submatcher<Object>(null, null);
 	}
 	
 	@Test
@@ -116,7 +134,7 @@ public class SubmatcherTest
 	{
 		SpyHolder.setSpy(mockSpy());
 		
-		Submatcher<?> actual = such(null, null);
+		Submatcher<?> actual = such(null, (Matcher<?>) mock(Matcher.class));
 		
 		assertThat(actual, is(instanceOf(Submatcher.class)));
 	}
@@ -126,7 +144,7 @@ public class SubmatcherTest
 	{
 		SpyHolder.setSpy(mockSpy(Person.class.getMethod("getName")));
 		
-		Submatcher<?> actual = such(null, null);
+		Submatcher<?> actual = such(null, (Matcher<?>) mock(Matcher.class));
 		
 		assertThat(actual.getInvokedMethod(), is(Person.class.getMethod("getName")));
 	}

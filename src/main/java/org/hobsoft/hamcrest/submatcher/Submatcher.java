@@ -41,6 +41,11 @@ public class Submatcher<T> extends TypeSafeMatcher<T>
 
 	Submatcher(Method invokedMethod, Matcher<?> matcher)
 	{
+		if (matcher == null)
+		{
+			throw new NullPointerException("matcher");
+		}
+		
 		this.invokedMethod = invokedMethod;
 		this.matcher = matcher;
 	}
