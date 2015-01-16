@@ -78,6 +78,8 @@ public class SpyHolderTest
 	@Test
 	public void getSpyWhenUnsetThrowsException()
 	{
+		SpyHolder.setSpy(null);
+
 		thrown.expect(IllegalStateException.class);
 		thrown.expectMessage("Spy has not been set");
 		
