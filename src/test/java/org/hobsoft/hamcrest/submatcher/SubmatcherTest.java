@@ -134,7 +134,7 @@ public class SubmatcherTest
 	{
 		SpyHolder.setSpy(mockSpy());
 		
-		Submatcher<?> actual = such(null, (Matcher<?>) mock(Matcher.class));
+		Submatcher<?> actual = such(null, mockMatcher());
 		
 		assertThat(actual, is(instanceOf(Submatcher.class)));
 	}
@@ -144,7 +144,7 @@ public class SubmatcherTest
 	{
 		SpyHolder.setSpy(mockSpy(Person.class.getMethod("getName")));
 		
-		Submatcher<?> actual = such(null, (Matcher<?>) mock(Matcher.class));
+		Submatcher<?> actual = such(null, mockMatcher());
 		
 		assertThat(actual.getInvokedMethod(), is(Person.class.getMethod("getName")));
 	}
@@ -205,6 +205,11 @@ public class SubmatcherTest
 	// ----------------------------------------------------------------------------------------------------------------
 	// private methods
 	// ----------------------------------------------------------------------------------------------------------------
+
+	private static Matcher<?> mockMatcher()
+	{
+		return mock(Matcher.class);
+	}
 
 	private static Spy<?> mockSpy() throws NoSuchMethodException
 	{
