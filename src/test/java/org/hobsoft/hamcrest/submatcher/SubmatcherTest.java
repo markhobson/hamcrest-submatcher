@@ -58,13 +58,13 @@ public class SubmatcherTest
 	// ----------------------------------------------------------------------------------------------------------------
 	
 	@Test
-	public void suchReturnsMatcher() throws NoSuchMethodException
+	public void suchReturnsSubmatcher() throws NoSuchMethodException
 	{
 		SpyHolder.setSpy(mockSpy());
 		
-		Matcher<?> actual = such(null, null);
+		Submatcher<?> actual = such(null, null);
 		
-		assertThat(actual, is(instanceOf(Matcher.class)));
+		assertThat(actual, is(instanceOf(Submatcher.class)));
 	}
 	
 	@Test
