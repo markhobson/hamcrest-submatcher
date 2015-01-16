@@ -68,6 +68,16 @@ public class SubmatcherTest
 	}
 	
 	@Test
+	public void suchReturnsSubmatcherWithInvokedMethod() throws NoSuchMethodException
+	{
+		SpyHolder.setSpy(mockSpy(Person.class.getMethod("getName")));
+		
+		Submatcher<?> actual = such(null, null);
+		
+		assertThat(actual.getInvokedMethod(), is(Person.class.getMethod("getName")));
+	}
+	
+	@Test
 	public void suchMatchesInvokesSubmatcher() throws NoSuchMethodException
 	{
 		SpyHolder.setSpy(mockSpy(Person.class.getMethod("getName")));
