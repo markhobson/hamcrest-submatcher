@@ -37,9 +37,14 @@ final class SpyHolder
 	// public methods
 	// ----------------------------------------------------------------------------------------------------------------
 
+	public static boolean hasSpy()
+	{
+		return (spy != null);
+	}
+
 	public static Spy<?> getSpy()
 	{
-		if (spy == null)
+		if (!hasSpy())
 		{
 			throw new IllegalStateException("Spy has not been set");
 		}

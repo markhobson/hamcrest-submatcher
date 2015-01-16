@@ -189,6 +189,17 @@ public class SubmatcherTest
 	}
 	
 	@Test
+	public void suchWhenNullSpyThrowsException()
+	{
+		SpyHolder.setSpy(null);
+		
+		thrown.expect(IllegalStateException.class);
+		thrown.expectMessage("that() must be invoked before such()");
+		
+		such(null, mockMatcher());
+	}
+	
+	@Test
 	public void thatWithClassReturnsInstance()
 	{
 		Person actual = that(Person.class);

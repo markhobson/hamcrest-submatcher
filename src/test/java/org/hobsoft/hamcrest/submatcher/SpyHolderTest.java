@@ -18,6 +18,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
+import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
 
@@ -53,6 +54,26 @@ public class SpyHolderTest
 	// ----------------------------------------------------------------------------------------------------------------
 	// tests
 	// ----------------------------------------------------------------------------------------------------------------
+	
+	@Test
+	public void hasSpyWhenSetReturnsTrue()
+	{
+		SpyHolder.setSpy(mock(Spy.class));
+		
+		boolean actual = SpyHolder.hasSpy();
+		
+		assertThat(actual, is(true));
+	}
+	
+	@Test
+	public void hasSpyWhenUnsetReturnsFalse()
+	{
+		SpyHolder.setSpy(null);
+		
+		boolean actual = SpyHolder.hasSpy();
+		
+		assertThat(actual, is(false));
+	}
 	
 	@Test
 	public void getSpyWhenUnsetThrowsException()

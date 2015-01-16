@@ -89,6 +89,11 @@ public class Submatcher<T> extends TypeSafeMatcher<T>
 
 	public static <T, U> Submatcher<T> such(U that, Matcher<U> matcher)
 	{
+		if (!SpyHolder.hasSpy())
+		{
+			throw new IllegalStateException("that() must be invoked before such()");
+		}
+		
 		Method invokedMethod = SpyHolder.getSpy().getInvokedMethod();
 		
 		return new Submatcher<T>(invokedMethod, matcher);
