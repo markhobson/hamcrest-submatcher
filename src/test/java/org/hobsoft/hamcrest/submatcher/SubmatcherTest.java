@@ -58,6 +58,24 @@ public class SubmatcherTest
 	// ----------------------------------------------------------------------------------------------------------------
 	
 	@Test
+	public void constructorSetsInvokedMethod() throws NoSuchMethodException
+	{
+		Submatcher<Person> actual = new Submatcher<Person>(Person.class.getMethod("getName"), null);
+		
+		assertThat(actual.getInvokedMethod(), is(Person.class.getMethod("getName")));
+	}
+	
+	@Test
+	public void constructorSetsMatcher()
+	{
+		Matcher<?> matcher = mock(Matcher.class);
+		
+		Submatcher<?> actual = new Submatcher<Object>(null, matcher);
+		
+		assertThat(actual.getMatcher(), is((Object) matcher));
+	}
+	
+	@Test
 	public void matchesInvokesSubmatcher() throws NoSuchMethodException
 	{
 		Matcher<Name> matcher = mock(Matcher.class);
