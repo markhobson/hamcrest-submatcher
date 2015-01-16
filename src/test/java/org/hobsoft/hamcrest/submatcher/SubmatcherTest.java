@@ -58,26 +58,6 @@ public class SubmatcherTest
 	// ----------------------------------------------------------------------------------------------------------------
 	
 	@Test
-	public void suchReturnsSubmatcher() throws NoSuchMethodException
-	{
-		SpyHolder.setSpy(mockSpy());
-		
-		Submatcher<?> actual = such(null, null);
-		
-		assertThat(actual, is(instanceOf(Submatcher.class)));
-	}
-	
-	@Test
-	public void suchReturnsSubmatcherWithInvokedMethod() throws NoSuchMethodException
-	{
-		SpyHolder.setSpy(mockSpy(Person.class.getMethod("getName")));
-		
-		Submatcher<?> actual = such(null, null);
-		
-		assertThat(actual.getInvokedMethod(), is(Person.class.getMethod("getName")));
-	}
-	
-	@Test
 	public void matchesInvokesSubmatcher() throws NoSuchMethodException
 	{
 		Matcher<Name> matcher = mock(Matcher.class);
@@ -113,6 +93,26 @@ public class SubmatcherTest
 		assertThat(actual, is(false));
 	}
 
+	@Test
+	public void suchReturnsSubmatcher() throws NoSuchMethodException
+	{
+		SpyHolder.setSpy(mockSpy());
+		
+		Submatcher<?> actual = such(null, null);
+		
+		assertThat(actual, is(instanceOf(Submatcher.class)));
+	}
+	
+	@Test
+	public void suchReturnsSubmatcherWithInvokedMethod() throws NoSuchMethodException
+	{
+		SpyHolder.setSpy(mockSpy(Person.class.getMethod("getName")));
+		
+		Submatcher<?> actual = such(null, null);
+		
+		assertThat(actual.getInvokedMethod(), is(Person.class.getMethod("getName")));
+	}
+	
 	@Test
 	public void thatWithClassReturnsInstance()
 	{
