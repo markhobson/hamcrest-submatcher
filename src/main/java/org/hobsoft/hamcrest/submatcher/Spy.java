@@ -43,6 +43,11 @@ class Spy<T> implements MethodInterceptor
 
 	public Spy(Class<T> type)
 	{
+		if (type == null)
+		{
+			throw new NullPointerException("type");
+		}
+		
 		this.type = type;
 	}
 	

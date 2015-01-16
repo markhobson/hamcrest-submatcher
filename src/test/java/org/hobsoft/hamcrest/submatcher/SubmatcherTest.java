@@ -224,6 +224,15 @@ public class SubmatcherTest
 	}
 	
 	@Test
+	public void thatWithNullThrowsException()
+	{
+		thrown.expect(NullPointerException.class);
+		thrown.expectMessage("type");
+		
+		that(null);
+	}
+	
+	@Test
 	public void suchThatMatchesWhenMatchesReturnsTrue()
 	{
 		Name name = new Name("x");

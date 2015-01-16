@@ -101,6 +101,11 @@ public class Submatcher<T> extends TypeSafeMatcher<T>
 	
 	public static <U> U that(Class<U> type)
 	{
+		if (type == null)
+		{
+			throw new NullPointerException("type");
+		}
+		
 		Spy<U> spy = new Spy<U>(type);
 		
 		SpyHolder.setSpy(spy);

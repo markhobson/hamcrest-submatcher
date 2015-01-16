@@ -14,7 +14,9 @@
 package org.hobsoft.hamcrest.submatcher;
 
 import org.hobsoft.hamcrest.submatcher.test.Person;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.CoreMatchers.is;
@@ -26,9 +28,34 @@ import static org.junit.Assert.assertThat;
 public class SpyTest
 {
 	// ----------------------------------------------------------------------------------------------------------------
+	// fields
+	// ----------------------------------------------------------------------------------------------------------------
+
+	private ExpectedException thrown = ExpectedException.none();
+	
+	// ----------------------------------------------------------------------------------------------------------------
+	// JUnit methods
+	// ----------------------------------------------------------------------------------------------------------------
+
+	@Rule
+	public ExpectedException getThrown()
+	{
+		return thrown;
+	}
+
+	// ----------------------------------------------------------------------------------------------------------------
 	// tests
 	// ----------------------------------------------------------------------------------------------------------------
 
+	@Test
+	public void constructorWithNullThrowsException()
+	{
+		thrown.expect(NullPointerException.class);
+		thrown.expectMessage("type");
+		
+		new Spy<Object>(null);
+	}
+	
 	@Test
 	public void createReturnsInstance()
 	{
