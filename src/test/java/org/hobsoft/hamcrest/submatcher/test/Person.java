@@ -51,4 +51,9 @@ public class Person
 	{
 		this.name = name;
 	}
+	
+	public void throwException() throws Exception
+	{
+		throw new Exception();
+	}
 }

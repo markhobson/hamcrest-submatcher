@@ -130,6 +130,16 @@ public class SubmatcherTest
 	}
 
 	@Test
+	public void matchesSafelyWhenInvokedMethodThrowsExceptionReturnsFalse() throws NoSuchMethodException
+	{
+		Submatcher<Person> submatcher = new Submatcher<Person>(Person.class.getMethod("throwException"), mockMatcher());
+		
+		boolean actual = submatcher.matchesSafely(new Person());
+		
+		assertThat(actual, is(false));
+	}
+	
+	@Test
 	public void suchReturnsSubmatcher() throws NoSuchMethodException
 	{
 		SpyHolder.setSpy(mockSpy());
