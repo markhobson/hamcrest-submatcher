@@ -79,7 +79,7 @@ public class Submatcher<T> extends TypeSafeMatcher<T>
 	// public methods
 	// ----------------------------------------------------------------------------------------------------------------
 
-	public static <T, U> Submatcher<T> such(U actual, Matcher<U> matcher)
+	public static <T, U> Submatcher<T> such(U that, Matcher<U> matcher)
 	{
 		Method invokedMethod = SpyHolder.getSpy().getInvokedMethod();
 		
