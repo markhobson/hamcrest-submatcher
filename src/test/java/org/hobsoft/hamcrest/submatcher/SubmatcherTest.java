@@ -114,6 +114,17 @@ public class SubmatcherTest
 	}
 	
 	@Test
+	public void suchReturnsSubmatcherWithMatcher() throws NoSuchMethodException
+	{
+		SpyHolder.setSpy(mockSpy());
+		Matcher<Object> matcher = mock(Matcher.class);
+		
+		Submatcher<?> actual = such(null, matcher);
+		
+		assertThat(actual.getMatcher(), is((Object) matcher));
+	}
+	
+	@Test
 	public void thatWithClassReturnsInstance()
 	{
 		Person actual = that(Person.class);

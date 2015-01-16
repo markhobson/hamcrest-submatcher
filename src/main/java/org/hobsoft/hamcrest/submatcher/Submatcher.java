@@ -103,4 +103,9 @@ public class Submatcher<T> extends TypeSafeMatcher<T>
 	{
 		return invokedMethod;
 	}
+
+	Matcher<?> getMatcher()
+	{
+		return matcher;
+	}
 }
