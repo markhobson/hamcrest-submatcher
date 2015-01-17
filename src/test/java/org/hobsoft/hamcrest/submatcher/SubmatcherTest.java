@@ -26,9 +26,10 @@ import org.junit.rules.ExpectedException;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 
+import net.sf.cglib.proxy.Factory;
+
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hobsoft.hamcrest.submatcher.Submatcher.such;
 import static org.hobsoft.hamcrest.submatcher.Submatcher.that;
 import static org.junit.Assert.assertThat;
@@ -200,27 +201,11 @@ public class SubmatcherTest
 	}
 	
 	@Test
-	public void thatWithClassReturnsInstance()
+	public void thatReturnsSpy()
 	{
 		Person actual = that(Person.class);
 		
-		assertThat(actual, is(instanceOf(Person.class)));
-	}
-	
-	@Test
-	public void thatWithClassThenMethodReturnsNull()
-	{
-		Name actual = that(Person.class).getName();
-		
-		assertThat(actual, is(nullValue()));
-	}
-	
-	@Test
-	public void thatWithClassThenMethodSetsInvokedMethod() throws NoSuchMethodException
-	{
-		that(Person.class).getName();
-		
-		assertThat(SpyHolder.getSpy().getInvokedMethod(), is(Person.class.getMethod("getName")));
+		assertThat(((Factory) actual).getCallback(0), is(instanceOf(Spy.class)));
 	}
 	
 	@Test
