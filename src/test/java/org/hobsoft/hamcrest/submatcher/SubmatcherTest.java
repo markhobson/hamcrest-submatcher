@@ -190,6 +190,15 @@ public class SubmatcherTest
 	}
 	
 	@Test
+	public void suchWithNonNullThatThrowsException()
+	{
+		thrown.expect(IllegalArgumentException.class);
+		thrown.expectMessage("that() must be the first argument to such()");
+		
+		such("x", mockMatcher());
+	}
+	
+	@Test
 	public void suchWithNullMatcherThrowsException()
 	{
 		thrown.expect(NullPointerException.class);
@@ -248,7 +257,7 @@ public class SubmatcherTest
 	// private methods
 	// ----------------------------------------------------------------------------------------------------------------
 
-	private static Matcher<?> mockMatcher()
+	private static <T> Matcher<T> mockMatcher()
 	{
 		return mock(Matcher.class);
 	}

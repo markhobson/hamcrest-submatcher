@@ -89,6 +89,11 @@ public class Submatcher<T> extends TypeSafeMatcher<T>
 
 	public static <T, U> Submatcher<T> such(U that, Matcher<U> matcher)
 	{
+		if (that != null)
+		{
+			throw new IllegalArgumentException("that() must be the first argument to such()");
+		}
+		
 		if (matcher == null)
 		{
 			throw new NullPointerException("matcher");
