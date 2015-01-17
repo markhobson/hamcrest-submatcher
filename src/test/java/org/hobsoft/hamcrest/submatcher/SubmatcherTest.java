@@ -190,6 +190,15 @@ public class SubmatcherTest
 	}
 	
 	@Test
+	public void suchWithNullMatcherThrowsException()
+	{
+		thrown.expect(NullPointerException.class);
+		thrown.expectMessage("matcher");
+		
+		such(null, null);
+	}
+	
+	@Test
 	public void suchWhenNullSpyThrowsException()
 	{
 		SpyHolder.setSpy(null);
