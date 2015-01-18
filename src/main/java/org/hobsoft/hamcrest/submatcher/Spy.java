@@ -24,6 +24,8 @@ import net.sf.cglib.proxy.Factory;
 import net.sf.cglib.proxy.MethodInterceptor;
 import net.sf.cglib.proxy.MethodProxy;
 
+import static org.hobsoft.hamcrest.submatcher.Preconditions.checkNotNull;
+
 /**
  * Factory for proxies that record their method invocations.
  */
@@ -43,12 +45,7 @@ class Spy<T> implements MethodInterceptor
 
 	public Spy(Class<T> type)
 	{
-		if (type == null)
-		{
-			throw new NullPointerException("type");
-		}
-		
-		this.type = type;
+		this.type = checkNotNull(type, "type");
 	}
 	
 	// ----------------------------------------------------------------------------------------------------------------

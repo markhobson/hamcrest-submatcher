@@ -17,6 +17,8 @@ import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
 
+import static org.hobsoft.hamcrest.submatcher.Preconditions.checkNotNull;
+
 /**
  * Matcher for a sub-property of an instance.
  * 
@@ -39,18 +41,8 @@ public class Submatcher<T> extends TypeSafeMatcher<T>
 
 	Submatcher(MethodInvocation invocation, Matcher<?> matcher)
 	{
-		if (invocation == null)
-		{
-			throw new NullPointerException("invocation");
-		}
-		
-		if (matcher == null)
-		{
-			throw new NullPointerException("matcher");
-		}
-		
-		this.invocation = invocation;
-		this.matcher = matcher;
+		this.invocation = checkNotNull(invocation, "invocation");
+		this.matcher = checkNotNull(matcher, "matcher");
 	}
 
 	// ----------------------------------------------------------------------------------------------------------------
@@ -97,10 +89,7 @@ public class Submatcher<T> extends TypeSafeMatcher<T>
 			throw new IllegalArgumentException("that() must be the first argument to such()");
 		}
 		
-		if (matcher == null)
-		{
-			throw new NullPointerException("matcher");
-		}
+		checkNotNull(matcher, "matcher");
 		
 		if (!SpyHolder.hasSpy())
 		{
@@ -114,10 +103,7 @@ public class Submatcher<T> extends TypeSafeMatcher<T>
 	
 	public static <U> U that(Class<U> type)
 	{
-		if (type == null)
-		{
-			throw new NullPointerException("type");
-		}
+		checkNotNull(type, "type");
 		
 		Spy<U> spy = new Spy<U>(type);
 		
