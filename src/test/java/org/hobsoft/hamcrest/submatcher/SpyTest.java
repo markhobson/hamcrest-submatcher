@@ -77,12 +77,12 @@ public class SpyTest
 	}
 	
 	@Test
-	public void createThenMethodSetsInvokedMethod() throws NoSuchMethodException
+	public void createThenMethodSetsInvocation() throws NoSuchMethodException
 	{
 		Spy<Person> spy = new Spy<Person>(Person.class);
 		
 		spy.create().getName();
 		
-		assertThat(spy.getInvokedMethod(), is(Person.class.getMethod("getName")));
+		assertThat(spy.getInvocation().getMethod(), is(Person.class.getMethod("getName")));
 	}
 }

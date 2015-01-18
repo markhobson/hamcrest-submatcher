@@ -15,73 +15,32 @@ package org.hobsoft.hamcrest.submatcher;
 
 import java.lang.reflect.Method;
 
-import org.objenesis.Objenesis;
-import org.objenesis.ObjenesisStd;
-
-import net.sf.cglib.proxy.Callback;
-import net.sf.cglib.proxy.Enhancer;
-import net.sf.cglib.proxy.Factory;
-import net.sf.cglib.proxy.MethodInterceptor;
-import net.sf.cglib.proxy.MethodProxy;
-
 /**
- * Factory for proxies that record their method invocations.
+ * Defines an invocation of a Java method.
  */
-class Spy<T> implements MethodInterceptor
+final class MethodInvocation
 {
 	// ----------------------------------------------------------------------------------------------------------------
 	// fields
 	// ----------------------------------------------------------------------------------------------------------------
 
-	private final Class<T> type;
+	private final Method method;
 	
-	private MethodInvocation invocation;
-
 	// ----------------------------------------------------------------------------------------------------------------
 	// constructors
 	// ----------------------------------------------------------------------------------------------------------------
 
-	public Spy(Class<T> type)
+	public MethodInvocation(Method method)
 	{
-		if (type == null)
-		{
-			throw new NullPointerException("type");
-		}
-		
-		this.type = type;
-	}
-	
-	// ----------------------------------------------------------------------------------------------------------------
-	// MethodInterceptor methods
-	// ----------------------------------------------------------------------------------------------------------------
-
-	public Object intercept(Object obj, Method method, Object[] args, MethodProxy proxy)
-	{
-		invocation = new MethodInvocation(method);
-		
-		return null;
+		this.method = method;
 	}
 	
 	// ----------------------------------------------------------------------------------------------------------------
 	// public methods
 	// ----------------------------------------------------------------------------------------------------------------
 
-	public T create()
+	public Method getMethod()
 	{
-		Enhancer enhancer = new Enhancer();
-		enhancer.setSuperclass(type);
-		enhancer.setCallbackType(MethodInterceptor.class);
-		Class<?> proxyType = enhancer.createClass();
-		
-		Objenesis objenesis = new ObjenesisStd();
-		Factory proxy = (Factory) objenesis.newInstance(proxyType);
-		proxy.setCallbacks(new Callback[] {this});
-		
-		return type.cast(proxy);
-	}
-	
-	public MethodInvocation getInvocation()
-	{
-		return invocation;
+		return method;
 	}
 }

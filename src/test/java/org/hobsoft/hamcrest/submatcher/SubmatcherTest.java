@@ -73,11 +73,13 @@ public class SubmatcherTest
 	// ----------------------------------------------------------------------------------------------------------------
 	
 	@Test
-	public void constructorSetsInvokedMethod() throws NoSuchMethodException
+	public void constructorSetsInvocation() throws NoSuchMethodException
 	{
-		Submatcher<Person> actual = new Submatcher<Person>(Person.class.getMethod("getName"), mock(Matcher.class));
+		MethodInvocation invocation = new MethodInvocation(Person.class.getMethod("getName"));
 		
-		assertThat(actual.getInvokedMethod(), is(Person.class.getMethod("getName")));
+		Submatcher<Person> actual = new Submatcher<Person>(invocation, mock(Matcher.class));
+		
+		assertThat(actual.getInvocation(), is(invocation));
 	}
 	
 	@Test
@@ -103,7 +105,8 @@ public class SubmatcherTest
 	public void matchesSafelyInvokesSubmatcher() throws NoSuchMethodException
 	{
 		Matcher<Name> matcher = mock(Matcher.class);
-		Submatcher<Person> submatcher = new Submatcher<Person>(Person.class.getMethod("getName"), matcher);
+		MethodInvocation invocation = new MethodInvocation(Person.class.getMethod("getName"));
+		Submatcher<Person> submatcher = new Submatcher<Person>(invocation, matcher);
 		Name name = new Name("x");
 		
 		submatcher.matchesSafely(new Person(name));
@@ -116,7 +119,8 @@ public class SubmatcherTest
 	{
 		Matcher<Name> matcher = mock(Matcher.class);
 		when(matcher.matches(any())).thenReturn(true);
-		Submatcher<Person> submatcher = new Submatcher<Person>(Person.class.getMethod("getName"), matcher);
+		MethodInvocation invocation = new MethodInvocation(Person.class.getMethod("getName"));
+		Submatcher<Person> submatcher = new Submatcher<Person>(invocation, matcher);
 		
 		boolean actual = submatcher.matchesSafely(new Person());
 		
@@ -128,7 +132,8 @@ public class SubmatcherTest
 	{
 		Matcher<Name> matcher = mock(Matcher.class);
 		when(matcher.matches(any())).thenReturn(false);
-		Submatcher<Person> submatcher = new Submatcher<Person>(Person.class.getMethod("getName"), matcher);
+		MethodInvocation invocation = new MethodInvocation(Person.class.getMethod("getName"));
+		Submatcher<Person> submatcher = new Submatcher<Person>(invocation, matcher);
 		
 		boolean actual = submatcher.matchesSafely(new Person());
 		
@@ -138,7 +143,8 @@ public class SubmatcherTest
 	@Test
 	public void matchesSafelyWhenInvokedMethodThrowsExceptionReturnsFalse() throws NoSuchMethodException
 	{
-		Submatcher<Person> submatcher = new Submatcher<Person>(Person.class.getMethod("throwException"), mockMatcher());
+		MethodInvocation invocation = new MethodInvocation(Person.class.getMethod("throwException"));
+		Submatcher<Person> submatcher = new Submatcher<Person>(invocation, mockMatcher());
 		
 		boolean actual = submatcher.matchesSafely(new Person());
 		
@@ -150,7 +156,8 @@ public class SubmatcherTest
 	{
 		Matcher<?> matcher = mock(Matcher.class);
 		doAnswer(appendText("x")).when(matcher).describeTo(any(Description.class));
-		Submatcher<Person> submatcher = new Submatcher<Person>(Person.class.getMethod("getName"), matcher);
+		MethodInvocation invocation = new MethodInvocation(Person.class.getMethod("getName"));
+		Submatcher<Person> submatcher = new Submatcher<Person>(invocation, matcher);
 		StringDescription description = new StringDescription();
 		
 		submatcher.describeTo(description);
@@ -169,13 +176,13 @@ public class SubmatcherTest
 	}
 	
 	@Test
-	public void suchReturnsSubmatcherWithInvokedMethod() throws NoSuchMethodException
+	public void suchReturnsSubmatcherWithInvocation() throws NoSuchMethodException
 	{
 		SpyHolder.setSpy(mockSpy(Person.class.getMethod("getName")));
 		
 		Submatcher<?> actual = such(null, mockMatcher());
 		
-		assertThat(actual.getInvokedMethod(), is(Person.class.getMethod("getName")));
+		assertThat(actual.getInvocation().getMethod(), is(Person.class.getMethod("getName")));
 	}
 	
 	@Test
@@ -270,7 +277,7 @@ public class SubmatcherTest
 	private static Spy<Person> mockSpy(Method invokedMethod)
 	{
 		Spy<Person> spy = mock(Spy.class);
-		when(spy.getInvokedMethod()).thenReturn(invokedMethod);
+		when(spy.getInvocation()).thenReturn(new MethodInvocation(invokedMethod));
 		return spy;
 	}
 

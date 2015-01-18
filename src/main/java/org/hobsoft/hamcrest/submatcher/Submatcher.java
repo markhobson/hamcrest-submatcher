@@ -13,8 +13,6 @@
  */
 package org.hobsoft.hamcrest.submatcher;
 
-import java.lang.reflect.Method;
-
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
@@ -31,7 +29,7 @@ public class Submatcher<T> extends TypeSafeMatcher<T>
 	// fields
 	// ----------------------------------------------------------------------------------------------------------------
 
-	private final Method invokedMethod;
+	private final MethodInvocation invocation;
 	
 	private final Matcher<?> matcher;
 
@@ -39,14 +37,14 @@ public class Submatcher<T> extends TypeSafeMatcher<T>
 	// constructors
 	// ----------------------------------------------------------------------------------------------------------------
 
-	Submatcher(Method invokedMethod, Matcher<?> matcher)
+	Submatcher(MethodInvocation invocation, Matcher<?> matcher)
 	{
 		if (matcher == null)
 		{
 			throw new NullPointerException("matcher");
 		}
 		
-		this.invokedMethod = invokedMethod;
+		this.invocation = invocation;
 		this.matcher = matcher;
 	}
 
@@ -60,7 +58,7 @@ public class Submatcher<T> extends TypeSafeMatcher<T>
 		Object subactual;
 		try
 		{
-			subactual = invokedMethod.invoke(actual);
+			subactual = invocation.getMethod().invoke(actual);
 		}
 		catch (Exception exception)
 		{
@@ -77,7 +75,7 @@ public class Submatcher<T> extends TypeSafeMatcher<T>
 	public void describeTo(Description description)
 	{
 		description.appendText("such that ")
-			.appendText(invokedMethod.getName())
+			.appendText(invocation.getMethod().getName())
 			.appendText("()")
 			.appendText(" ")
 			.appendDescriptionOf(matcher);
@@ -104,9 +102,9 @@ public class Submatcher<T> extends TypeSafeMatcher<T>
 			throw new IllegalStateException("that() must be invoked before such()");
 		}
 		
-		Method invokedMethod = SpyHolder.getSpy().getInvokedMethod();
+		MethodInvocation invocation = SpyHolder.getSpy().getInvocation();
 		
-		return new Submatcher<T>(invokedMethod, matcher);
+		return new Submatcher<T>(invocation, matcher);
 	}
 	
 	public static <U> U that(Class<U> type)
@@ -127,9 +125,9 @@ public class Submatcher<T> extends TypeSafeMatcher<T>
 	// package methods
 	// ----------------------------------------------------------------------------------------------------------------
 
-	Method getInvokedMethod()
+	MethodInvocation getInvocation()
 	{
-		return invokedMethod;
+		return invocation;
 	}
 
 	Matcher<?> getMatcher()
