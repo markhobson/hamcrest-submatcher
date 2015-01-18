@@ -15,6 +15,8 @@ package org.hobsoft.hamcrest.submatcher;
 
 import java.lang.reflect.Method;
 
+import static org.hobsoft.hamcrest.submatcher.Preconditions.checkNotNull;
+
 /**
  * Defines an invocation of a Java method.
  */
@@ -32,7 +34,7 @@ final class MethodInvocation
 
 	public MethodInvocation(Method method)
 	{
-		this.method = method;
+		this.method = checkNotNull(method, "method");
 	}
 	
 	// ----------------------------------------------------------------------------------------------------------------
