@@ -55,7 +55,7 @@ public class Submatcher<T> extends TypeSafeMatcher<T>
 		Object subactual;
 		try
 		{
-			subactual = invocation.getMethod().invoke(actual);
+			subactual = invocation.invoke(actual);
 		}
 		catch (Exception exception)
 		{

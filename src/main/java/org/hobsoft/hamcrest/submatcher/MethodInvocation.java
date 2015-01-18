@@ -13,6 +13,7 @@
  */
 package org.hobsoft.hamcrest.submatcher;
 
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 import static org.hobsoft.hamcrest.submatcher.Preconditions.checkNotNull;
@@ -41,6 +42,11 @@ final class MethodInvocation
 	// public methods
 	// ----------------------------------------------------------------------------------------------------------------
 
+	public Object invoke(Object instance) throws IllegalAccessException, InvocationTargetException
+	{
+		return method.invoke(instance);
+	}
+	
 	public Method getMethod()
 	{
 		return method;
