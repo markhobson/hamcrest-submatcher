@@ -75,7 +75,7 @@ public class SubmatcherTest
 	@Test
 	public void constructorSetsInvocation() throws NoSuchMethodException
 	{
-		MethodInvocation invocation = new MethodInvocation(Person.class.getMethod("getName"));
+		MethodInvocation invocation = newInvocation();
 		
 		Submatcher<Person> actual = new Submatcher<Person>(invocation, mock(Matcher.class));
 		
@@ -83,22 +83,31 @@ public class SubmatcherTest
 	}
 	
 	@Test
-	public void constructorSetsMatcher()
+	public void constructorWithNullInvocationThrowsException()
+	{
+		thrown.expect(NullPointerException.class);
+		thrown.expectMessage("invocation");
+		
+		new Submatcher<Person>(null, mock(Matcher.class));
+	}
+	
+	@Test
+	public void constructorSetsMatcher() throws NoSuchMethodException
 	{
 		Matcher<?> matcher = mock(Matcher.class);
 		
-		Submatcher<?> actual = new Submatcher<Object>(null, matcher);
+		Submatcher<?> actual = new Submatcher<Object>(newInvocation(), matcher);
 		
 		assertThat(actual.getMatcher(), is((Object) matcher));
 	}
 	
 	@Test
-	public void constructorWithNullMatcherThrowsException()
+	public void constructorWithNullMatcherThrowsException() throws NoSuchMethodException
 	{
 		thrown.expect(NullPointerException.class);
 		thrown.expectMessage("matcher");
 		
-		new Submatcher<Object>(null, null);
+		new Submatcher<Object>(newInvocation(), null);
 	}
 	
 	@Test
@@ -264,6 +273,16 @@ public class SubmatcherTest
 	// private methods
 	// ----------------------------------------------------------------------------------------------------------------
 
+	private static MethodInvocation newInvocation() throws NoSuchMethodException
+	{
+		return new MethodInvocation(someMethod());
+	}
+
+	private static Method someMethod() throws NoSuchMethodException
+	{
+		return Person.class.getMethod("getName");
+	}
+	
 	private static <T> Matcher<T> mockMatcher()
 	{
 		return mock(Matcher.class);
@@ -271,7 +290,7 @@ public class SubmatcherTest
 
 	private static Spy<?> mockSpy() throws NoSuchMethodException
 	{
-		return mockSpy(Person.class.getMethod("getName"));
+		return mockSpy(someMethod());
 	}
 
 	private static Spy<Person> mockSpy(Method invokedMethod)
