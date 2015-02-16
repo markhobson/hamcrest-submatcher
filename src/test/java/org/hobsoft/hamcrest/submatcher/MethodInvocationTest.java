@@ -17,6 +17,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 import org.hamcrest.CoreMatchers;
+import org.hamcrest.Matchers;
 import org.hamcrest.StringDescription;
 import org.hobsoft.hamcrest.submatcher.test.Name;
 import org.hobsoft.hamcrest.submatcher.test.Person;
@@ -66,12 +67,31 @@ public class MethodInvocationTest
 	}
 	
 	@Test
+	public void constructorSetsArguments() throws NoSuchMethodException
+	{
+		Method method = Person.class.getMethod("getNameWithArgument", String.class);
+		
+		MethodInvocation actual = new MethodInvocation(method, "x");
+		
+		assertThat(actual.getArguments(), is(Matchers.<Object>arrayContaining("x")));
+	}
+	
+	@Test
 	public void constructorWithNullMethodThrowsException()
 	{
 		thrown.expect(NullPointerException.class);
 		thrown.expectMessage("method");
 		
 		new MethodInvocation(null);
+	}
+	
+	@Test
+	public void constructorWithNullArgumentsThrowsException() throws NoSuchMethodException
+	{
+		thrown.expect(NullPointerException.class);
+		thrown.expectMessage("arguments");
+		
+		new MethodInvocation(Person.class.getMethod("getName"), (Object[]) null);
 	}
 	
 	@Test
@@ -87,6 +107,30 @@ public class MethodInvocationTest
 	}
 	
 	@Test
+	public void describeToWithArgumentAppendsDescription() throws NoSuchMethodException
+	{
+		Method method = Person.class.getMethod("getNameWithArgument", String.class);
+		MethodInvocation invocation = new MethodInvocation(method, "x");
+		StringDescription description = new StringDescription();
+		
+		invocation.describeTo(description);
+		
+		assertThat(description.toString(), is("getNameWithArgument(\"x\")"));
+	}
+	
+	@Test
+	public void describeToWithArgumentsAppendsDescription() throws NoSuchMethodException
+	{
+		Method method = Person.class.getMethod("getNameWithArguments", String.class, String.class);
+		MethodInvocation invocation = new MethodInvocation(method, "x", "y");
+		StringDescription description = new StringDescription();
+		
+		invocation.describeTo(description);
+		
+		assertThat(description.toString(), is("getNameWithArguments(\"x\", \"y\")"));
+	}
+	
+	@Test
 	public void invokeInvokesMethod() throws NoSuchMethodException, IllegalAccessException, InvocationTargetException
 	{
 		MethodInvocation invocation = new MethodInvocation(Person.class.getMethod("getName"));
@@ -95,6 +139,19 @@ public class MethodInvocationTest
 		invocation.invoke(instance);
 		
 		verify(instance).getName();
+	}
+	
+	@Test
+	public void invokeWithArgumentInvokesMethod() throws NoSuchMethodException, IllegalAccessException,
+		InvocationTargetException
+	{
+		MethodInvocation invocation = new MethodInvocation(Person.class.getMethod("getNameWithArgument", String.class),
+			"x");
+		Person instance = mock(Person.class);
+		
+		invocation.invoke(instance);
+		
+		verify(instance).getNameWithArgument("x");
 	}
 	
 	@Test

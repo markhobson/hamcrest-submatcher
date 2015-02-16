@@ -54,7 +54,7 @@ class Spy<T> implements MethodInterceptor
 
 	public Object intercept(Object obj, Method method, Object[] args, MethodProxy proxy)
 	{
-		invocation = new MethodInvocation(method);
+		invocation = new MethodInvocation(method, args);
 		
 		return null;
 	}

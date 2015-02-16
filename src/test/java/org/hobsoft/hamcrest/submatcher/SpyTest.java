@@ -13,6 +13,7 @@
  */
 package org.hobsoft.hamcrest.submatcher;
 
+import org.hamcrest.Matchers;
 import org.hobsoft.hamcrest.submatcher.test.Name;
 import org.hobsoft.hamcrest.submatcher.test.Person;
 import org.junit.Rule;
@@ -77,12 +78,22 @@ public class SpyTest
 	}
 	
 	@Test
-	public void createThenMethodSetsInvocation() throws NoSuchMethodException
+	public void createThenMethodSetsInvokedMethod() throws NoSuchMethodException
 	{
 		Spy<Person> spy = new Spy<Person>(Person.class);
 		
 		spy.create().getName();
 		
 		assertThat(spy.getInvocation().getMethod(), is(Person.class.getMethod("getName")));
+	}
+	
+	@Test
+	public void createThenMethodWithArgumentSetsInvokedMethodArguments()
+	{
+		Spy<Person> spy = new Spy<Person>(Person.class);
+		
+		spy.create().getNameWithArgument("x");
+		
+		assertThat(spy.getInvocation().getArguments(), is(Matchers.<Object>arrayContaining("x")));
 	}
 }

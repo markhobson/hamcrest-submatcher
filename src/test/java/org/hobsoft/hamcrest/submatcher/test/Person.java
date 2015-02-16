@@ -52,6 +52,16 @@ public class Person
 		this.name = name;
 	}
 	
+	public Name getNameWithArgument(String arg)
+	{
+		return name;
+	}
+	
+	public Name getNameWithArguments(String arg1, String arg2)
+	{
+		return name;
+	}
+	
 	public void throwException() throws Exception
 	{
 		throw new Exception();

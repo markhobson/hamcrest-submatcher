@@ -32,13 +32,16 @@ class MethodInvocation implements SelfDescribing
 
 	private final Method method;
 	
+	private final Object[] arguments;
+	
 	// ----------------------------------------------------------------------------------------------------------------
 	// constructors
 	// ----------------------------------------------------------------------------------------------------------------
 
-	public MethodInvocation(Method method)
+	public MethodInvocation(Method method, Object... arguments)
 	{
 		this.method = checkNotNull(method, "method");
+		this.arguments = checkNotNull(arguments, "arguments");
 	}
 	
 	// ----------------------------------------------------------------------------------------------------------------
@@ -48,7 +51,7 @@ class MethodInvocation implements SelfDescribing
 	public void describeTo(Description description)
 	{
 		description.appendText(method.getName())
-			.appendText("()");
+			.appendValueList("(", ", ", ")", arguments);
 	}
 	
 	// ----------------------------------------------------------------------------------------------------------------
@@ -57,11 +60,16 @@ class MethodInvocation implements SelfDescribing
 
 	public Object invoke(Object instance) throws IllegalAccessException, InvocationTargetException
 	{
-		return method.invoke(instance);
+		return method.invoke(instance, arguments);
 	}
 	
 	public Method getMethod()
 	{
 		return method;
+	}
+
+	public Object[] getArguments()
+	{
+		return arguments;
 	}
 }

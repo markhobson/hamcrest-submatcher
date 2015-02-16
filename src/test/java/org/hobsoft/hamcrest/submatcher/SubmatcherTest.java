@@ -124,6 +124,20 @@ public class SubmatcherTest
 	}
 	
 	@Test
+	public void matchesSafelyWhenArgumentInvokesSubmatcher() throws NoSuchMethodException
+	{
+		Matcher<Name> matcher = mock(Matcher.class);
+		Method method = Person.class.getMethod("getNameWithArgument", String.class);
+		MethodInvocation invocation = new MethodInvocation(method, "x");
+		Submatcher<Person> submatcher = new Submatcher<Person>(invocation, matcher);
+		Name name = new Name("y");
+		
+		submatcher.matchesSafely(new Person(name));
+
+		verify(matcher).matches(name);
+	}
+	
+	@Test
 	public void matchesSafelyWhenMatchesReturnsTrue() throws NoSuchMethodException
 	{
 		MethodInvocation invocation = new MethodInvocation(Person.class.getMethod("getName"));
@@ -270,6 +284,16 @@ public class SubmatcherTest
 		assertThat(actual.matches(new Person(new Name("y"))), is(false));
 	}
 
+	@Test
+	public void suchThatMatchesWithArgumentWhenMatchesReturnsTrue()
+	{
+		Name name = new Name("x");
+		
+		Matcher<Person> actual = such(that(Person.class).getNameWithArgument("y"), is(name));
+		
+		assertThat(actual.matches(new Person(name)), is(true));
+	}
+	
 	// ----------------------------------------------------------------------------------------------------------------
 	// private methods
 	// ----------------------------------------------------------------------------------------------------------------
