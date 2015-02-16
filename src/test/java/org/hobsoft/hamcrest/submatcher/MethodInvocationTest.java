@@ -17,6 +17,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 import org.hamcrest.CoreMatchers;
+import org.hamcrest.StringDescription;
 import org.hobsoft.hamcrest.submatcher.test.Name;
 import org.hobsoft.hamcrest.submatcher.test.Person;
 import org.junit.Rule;
@@ -71,6 +72,18 @@ public class MethodInvocationTest
 		thrown.expectMessage("method");
 		
 		new MethodInvocation(null);
+	}
+	
+	@Test
+	public void describeToAppendsDescription() throws NoSuchMethodException
+	{
+		Method method = Person.class.getMethod("getName");
+		MethodInvocation invocation = new MethodInvocation(method);
+		StringDescription description = new StringDescription();
+		
+		invocation.describeTo(description);
+		
+		assertThat(description.toString(), is("getName()"));
 	}
 	
 	@Test

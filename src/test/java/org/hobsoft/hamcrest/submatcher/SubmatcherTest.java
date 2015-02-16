@@ -161,17 +161,18 @@ public class SubmatcherTest
 	}
 	
 	@Test
-	public void describeToAppendsDescription() throws NoSuchMethodException
+	public void describeToAppendsDescription()
 	{
 		Matcher<?> matcher = mock(Matcher.class);
 		doAnswer(appendText("x")).when(matcher).describeTo(any(Description.class));
-		MethodInvocation invocation = new MethodInvocation(Person.class.getMethod("getName"));
+		MethodInvocation invocation = mock(MethodInvocation.class);
+		doAnswer(appendText("y")).when(invocation).describeTo(any(Description.class));
 		Submatcher<Person> submatcher = new Submatcher<Person>(invocation, matcher);
 		StringDescription description = new StringDescription();
 		
 		submatcher.describeTo(description);
 		
-		assertThat(description.toString(), is("such that getName() x"));
+		assertThat(description.toString(), is("such that y x"));
 	}
 
 	@Test

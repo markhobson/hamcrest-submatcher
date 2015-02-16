@@ -16,12 +16,15 @@ package org.hobsoft.hamcrest.submatcher;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
+import org.hamcrest.Description;
+import org.hamcrest.SelfDescribing;
+
 import static org.hobsoft.hamcrest.submatcher.Preconditions.checkNotNull;
 
 /**
  * Defines an invocation of a Java method.
  */
-final class MethodInvocation
+class MethodInvocation implements SelfDescribing
 {
 	// ----------------------------------------------------------------------------------------------------------------
 	// fields
@@ -36,6 +39,16 @@ final class MethodInvocation
 	public MethodInvocation(Method method)
 	{
 		this.method = checkNotNull(method, "method");
+	}
+	
+	// ----------------------------------------------------------------------------------------------------------------
+	// SelfDescribing methods
+	// ----------------------------------------------------------------------------------------------------------------
+
+	public void describeTo(Description description)
+	{
+		description.appendText(method.getName())
+			.appendText("()");
 	}
 	
 	// ----------------------------------------------------------------------------------------------------------------

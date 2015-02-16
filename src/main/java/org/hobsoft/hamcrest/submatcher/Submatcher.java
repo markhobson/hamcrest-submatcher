@@ -72,8 +72,7 @@ public class Submatcher<T> extends TypeSafeMatcher<T>
 	public void describeTo(Description description)
 	{
 		description.appendText("such that ")
-			.appendText(invocation.getMethod().getName())
-			.appendText("()")
+			.appendDescriptionOf(invocation)
 			.appendText(" ")
 			.appendDescriptionOf(matcher);
 	}
