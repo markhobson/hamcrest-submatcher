@@ -113,8 +113,8 @@ public class SubmatcherTest
 	@Test
 	public void matchesSafelyInvokesSubmatcher() throws NoSuchMethodException
 	{
-		Matcher<Name> matcher = mock(Matcher.class);
 		MethodInvocation invocation = new MethodInvocation(Person.class.getMethod("getName"));
+		Matcher<Name> matcher = mock(Matcher.class);
 		Submatcher<Person> submatcher = new Submatcher<Person>(invocation, matcher);
 		Name name = new Name("x");
 		
@@ -126,9 +126,9 @@ public class SubmatcherTest
 	@Test
 	public void matchesSafelyWhenMatchesReturnsTrue() throws NoSuchMethodException
 	{
+		MethodInvocation invocation = new MethodInvocation(Person.class.getMethod("getName"));
 		Matcher<Name> matcher = mock(Matcher.class);
 		when(matcher.matches(any())).thenReturn(true);
-		MethodInvocation invocation = new MethodInvocation(Person.class.getMethod("getName"));
 		Submatcher<Person> submatcher = new Submatcher<Person>(invocation, matcher);
 		
 		boolean actual = submatcher.matchesSafely(new Person());
@@ -139,9 +139,9 @@ public class SubmatcherTest
 	@Test
 	public void matchesSafelyWhenDoesNotMatchReturnsFalse() throws NoSuchMethodException
 	{
+		MethodInvocation invocation = new MethodInvocation(Person.class.getMethod("getName"));
 		Matcher<Name> matcher = mock(Matcher.class);
 		when(matcher.matches(any())).thenReturn(false);
-		MethodInvocation invocation = new MethodInvocation(Person.class.getMethod("getName"));
 		Submatcher<Person> submatcher = new Submatcher<Person>(invocation, matcher);
 		
 		boolean actual = submatcher.matchesSafely(new Person());
@@ -163,16 +163,16 @@ public class SubmatcherTest
 	@Test
 	public void describeToAppendsDescription()
 	{
-		Matcher<?> matcher = mock(Matcher.class);
-		doAnswer(appendText("x")).when(matcher).describeTo(any(Description.class));
 		MethodInvocation invocation = mock(MethodInvocation.class);
-		doAnswer(appendText("y")).when(invocation).describeTo(any(Description.class));
+		doAnswer(appendText("x")).when(invocation).describeTo(any(Description.class));
+		Matcher<?> matcher = mock(Matcher.class);
+		doAnswer(appendText("y")).when(matcher).describeTo(any(Description.class));
 		Submatcher<Person> submatcher = new Submatcher<Person>(invocation, matcher);
 		StringDescription description = new StringDescription();
 		
 		submatcher.describeTo(description);
 		
-		assertThat(description.toString(), is("such that y x"));
+		assertThat(description.toString(), is("such that x y"));
 	}
 
 	@Test
