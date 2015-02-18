@@ -293,6 +293,14 @@ public class SubmatcherTest
 		assertThat(actual.matches(new Person(name)), is(true));
 	}
 	
+	@Test
+	public void suchThatMatchesWithArgumentWhenDoesNotMatchReturnsFalse()
+	{
+		Matcher<Person> actual = such(that(Person.class).getNameWithArgument("y"), is(new Name("x")));
+		
+		assertThat(actual.matches(new Person(new Name("y"))), is(false));
+	}
+	
 	// ----------------------------------------------------------------------------------------------------------------
 	// private methods
 	// ----------------------------------------------------------------------------------------------------------------
