@@ -14,7 +14,6 @@
 package org.hobsoft.hamcrest.submatcher;
 
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 
 import org.hamcrest.CoreMatchers;
 import org.hamcrest.Matchers;
@@ -57,21 +56,17 @@ public class MethodInvocationTest
 	// ----------------------------------------------------------------------------------------------------------------
 
 	@Test
-	public void constructorSetsMethod() throws NoSuchMethodException
+	public void constructorSetsMethod()
 	{
-		Method method = Person.class.getMethod("getName");
+		MethodInvocation actual = new MethodInvocation(Person.GET_NAME);
 		
-		MethodInvocation actual = new MethodInvocation(method);
-		
-		assertThat(actual.getMethod(), is(method));
+		assertThat(actual.getMethod(), is(Person.GET_NAME));
 	}
 	
 	@Test
-	public void constructorSetsArguments() throws NoSuchMethodException
+	public void constructorSetsArguments()
 	{
-		Method method = Person.class.getMethod("getNameWithArgument", String.class);
-		
-		MethodInvocation actual = new MethodInvocation(method, "x");
+		MethodInvocation actual = new MethodInvocation(Person.GET_NAME_WITH_ARGUMENT, "x");
 		
 		assertThat(actual.getArguments(), is(Matchers.<Object>arrayContaining("x")));
 	}
@@ -86,19 +81,18 @@ public class MethodInvocationTest
 	}
 	
 	@Test
-	public void constructorWithNullArgumentsThrowsException() throws NoSuchMethodException
+	public void constructorWithNullArgumentsThrowsException()
 	{
 		thrown.expect(NullPointerException.class);
 		thrown.expectMessage("arguments");
 		
-		new MethodInvocation(Person.class.getMethod("getName"), (Object[]) null);
+		new MethodInvocation(Person.GET_NAME, (Object[]) null);
 	}
 	
 	@Test
-	public void describeToAppendsDescription() throws NoSuchMethodException
+	public void describeToAppendsDescription()
 	{
-		Method method = Person.class.getMethod("getName");
-		MethodInvocation invocation = new MethodInvocation(method);
+		MethodInvocation invocation = new MethodInvocation(Person.GET_NAME);
 		StringDescription description = new StringDescription();
 		
 		invocation.describeTo(description);
@@ -107,10 +101,9 @@ public class MethodInvocationTest
 	}
 	
 	@Test
-	public void describeToWithArgumentAppendsDescription() throws NoSuchMethodException
+	public void describeToWithArgumentAppendsDescription()
 	{
-		Method method = Person.class.getMethod("getNameWithArgument", String.class);
-		MethodInvocation invocation = new MethodInvocation(method, "x");
+		MethodInvocation invocation = new MethodInvocation(Person.GET_NAME_WITH_ARGUMENT, "x");
 		StringDescription description = new StringDescription();
 		
 		invocation.describeTo(description);
@@ -119,10 +112,9 @@ public class MethodInvocationTest
 	}
 	
 	@Test
-	public void describeToWithArgumentsAppendsDescription() throws NoSuchMethodException
+	public void describeToWithArgumentsAppendsDescription()
 	{
-		Method method = Person.class.getMethod("getNameWithArguments", String.class, String.class);
-		MethodInvocation invocation = new MethodInvocation(method, "x", "y");
+		MethodInvocation invocation = new MethodInvocation(Person.GET_NAME_WITH_ARGUMENTS, "x", "y");
 		StringDescription description = new StringDescription();
 		
 		invocation.describeTo(description);
@@ -131,9 +123,9 @@ public class MethodInvocationTest
 	}
 	
 	@Test
-	public void invokeInvokesMethod() throws NoSuchMethodException, IllegalAccessException, InvocationTargetException
+	public void invokeInvokesMethod() throws IllegalAccessException, InvocationTargetException
 	{
-		MethodInvocation invocation = new MethodInvocation(Person.class.getMethod("getName"));
+		MethodInvocation invocation = new MethodInvocation(Person.GET_NAME);
 		Person instance = mock(Person.class);
 		
 		invocation.invoke(instance);
@@ -142,11 +134,9 @@ public class MethodInvocationTest
 	}
 	
 	@Test
-	public void invokeWithArgumentInvokesMethod() throws NoSuchMethodException, IllegalAccessException,
-		InvocationTargetException
+	public void invokeWithArgumentInvokesMethod() throws IllegalAccessException, InvocationTargetException
 	{
-		MethodInvocation invocation = new MethodInvocation(Person.class.getMethod("getNameWithArgument", String.class),
-			"x");
+		MethodInvocation invocation = new MethodInvocation(Person.GET_NAME_WITH_ARGUMENT, "x");
 		Person instance = mock(Person.class);
 		
 		invocation.invoke(instance);
@@ -155,9 +145,9 @@ public class MethodInvocationTest
 	}
 	
 	@Test
-	public void invokeReturnsValue() throws NoSuchMethodException, IllegalAccessException, InvocationTargetException
+	public void invokeReturnsValue() throws IllegalAccessException, InvocationTargetException
 	{
-		MethodInvocation invocation = new MethodInvocation(Person.class.getMethod("getName"));
+		MethodInvocation invocation = new MethodInvocation(Person.GET_NAME);
 		Person instance = mock(Person.class);
 		Name name = new Name("x");
 		when(instance.getName()).thenReturn(name);

@@ -73,7 +73,7 @@ public class SubmatcherTest
 	// ----------------------------------------------------------------------------------------------------------------
 	
 	@Test
-	public void constructorSetsInvocation() throws NoSuchMethodException
+	public void constructorSetsInvocation()
 	{
 		MethodInvocation invocation = newInvocation();
 		
@@ -92,7 +92,7 @@ public class SubmatcherTest
 	}
 	
 	@Test
-	public void constructorSetsMatcher() throws NoSuchMethodException
+	public void constructorSetsMatcher()
 	{
 		Matcher<?> matcher = mock(Matcher.class);
 		
@@ -102,7 +102,7 @@ public class SubmatcherTest
 	}
 	
 	@Test
-	public void constructorWithNullMatcherThrowsException() throws NoSuchMethodException
+	public void constructorWithNullMatcherThrowsException()
 	{
 		thrown.expect(NullPointerException.class);
 		thrown.expectMessage("matcher");
@@ -111,9 +111,9 @@ public class SubmatcherTest
 	}
 	
 	@Test
-	public void matchesSafelyInvokesSubmatcher() throws NoSuchMethodException
+	public void matchesSafelyInvokesSubmatcher()
 	{
-		MethodInvocation invocation = new MethodInvocation(Person.class.getMethod("getName"));
+		MethodInvocation invocation = new MethodInvocation(Person.GET_NAME);
 		Matcher<Name> matcher = mock(Matcher.class);
 		Submatcher<Person> submatcher = new Submatcher<Person>(invocation, matcher);
 		Name name = new Name("x");
@@ -124,11 +124,10 @@ public class SubmatcherTest
 	}
 	
 	@Test
-	public void matchesSafelyWhenArgumentInvokesSubmatcher() throws NoSuchMethodException
+	public void matchesSafelyWhenArgumentInvokesSubmatcher()
 	{
 		Matcher<Name> matcher = mock(Matcher.class);
-		Method method = Person.class.getMethod("getNameWithArgument", String.class);
-		MethodInvocation invocation = new MethodInvocation(method, "x");
+		MethodInvocation invocation = new MethodInvocation(Person.GET_NAME_WITH_ARGUMENT, "x");
 		Submatcher<Person> submatcher = new Submatcher<Person>(invocation, matcher);
 		Name name = new Name("y");
 		
@@ -138,9 +137,9 @@ public class SubmatcherTest
 	}
 	
 	@Test
-	public void matchesSafelyWhenMatchesReturnsTrue() throws NoSuchMethodException
+	public void matchesSafelyWhenMatchesReturnsTrue()
 	{
-		MethodInvocation invocation = new MethodInvocation(Person.class.getMethod("getName"));
+		MethodInvocation invocation = new MethodInvocation(Person.GET_NAME);
 		Matcher<Name> matcher = mock(Matcher.class);
 		when(matcher.matches(any())).thenReturn(true);
 		Submatcher<Person> submatcher = new Submatcher<Person>(invocation, matcher);
@@ -151,9 +150,9 @@ public class SubmatcherTest
 	}
 	
 	@Test
-	public void matchesSafelyWhenDoesNotMatchReturnsFalse() throws NoSuchMethodException
+	public void matchesSafelyWhenDoesNotMatchReturnsFalse()
 	{
-		MethodInvocation invocation = new MethodInvocation(Person.class.getMethod("getName"));
+		MethodInvocation invocation = new MethodInvocation(Person.GET_NAME);
 		Matcher<Name> matcher = mock(Matcher.class);
 		when(matcher.matches(any())).thenReturn(false);
 		Submatcher<Person> submatcher = new Submatcher<Person>(invocation, matcher);
@@ -164,9 +163,9 @@ public class SubmatcherTest
 	}
 
 	@Test
-	public void matchesSafelyWhenInvokedMethodThrowsExceptionReturnsFalse() throws NoSuchMethodException
+	public void matchesSafelyWhenInvokedMethodThrowsExceptionReturnsFalse()
 	{
-		MethodInvocation invocation = new MethodInvocation(Person.class.getMethod("throwException"));
+		MethodInvocation invocation = new MethodInvocation(Person.THROW_EXCEPTION);
 		Submatcher<Person> submatcher = new Submatcher<Person>(invocation, mockMatcher());
 		
 		boolean actual = submatcher.matchesSafely(new Person());
@@ -190,7 +189,7 @@ public class SubmatcherTest
 	}
 
 	@Test
-	public void suchReturnsSubmatcher() throws NoSuchMethodException
+	public void suchReturnsSubmatcher()
 	{
 		SpyHolder.setSpy(mockSpy());
 		
@@ -200,17 +199,17 @@ public class SubmatcherTest
 	}
 	
 	@Test
-	public void suchReturnsSubmatcherWithInvocation() throws NoSuchMethodException
+	public void suchReturnsSubmatcherWithInvocation()
 	{
-		SpyHolder.setSpy(mockSpy(Person.class.getMethod("getName")));
+		SpyHolder.setSpy(mockSpy(Person.GET_NAME));
 		
 		Submatcher<?> actual = such(null, mockMatcher());
 		
-		assertThat(actual.getInvocation().getMethod(), is(Person.class.getMethod("getName")));
+		assertThat(actual.getInvocation().getMethod(), is(Person.GET_NAME));
 	}
 	
 	@Test
-	public void suchReturnsSubmatcherWithMatcher() throws NoSuchMethodException
+	public void suchReturnsSubmatcherWithMatcher()
 	{
 		SpyHolder.setSpy(mockSpy());
 		Matcher<?> matcher = mock(Matcher.class);
@@ -298,14 +297,14 @@ public class SubmatcherTest
 	// private methods
 	// ----------------------------------------------------------------------------------------------------------------
 
-	private static MethodInvocation newInvocation() throws NoSuchMethodException
+	private static MethodInvocation newInvocation()
 	{
 		return new MethodInvocation(someMethod());
 	}
 
-	private static Method someMethod() throws NoSuchMethodException
+	private static Method someMethod()
 	{
-		return Person.class.getMethod("getName");
+		return Person.GET_NAME;
 	}
 	
 	private static <T> Matcher<T> mockMatcher()
@@ -313,7 +312,7 @@ public class SubmatcherTest
 		return mock(Matcher.class);
 	}
 
-	private static Spy<?> mockSpy() throws NoSuchMethodException
+	private static Spy<?> mockSpy()
 	{
 		return mockSpy(someMethod());
 	}

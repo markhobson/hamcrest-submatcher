@@ -13,11 +13,40 @@
  */
 package org.hobsoft.hamcrest.submatcher.test;
 
+import java.lang.reflect.Method;
+
 /**
  * Simple type for unit tests.
  */
 public class Person
 {
+	// ----------------------------------------------------------------------------------------------------------------
+	// constants
+	// ----------------------------------------------------------------------------------------------------------------
+
+	public static final Method GET_NAME;
+	
+	public static final Method GET_NAME_WITH_ARGUMENT;
+	
+	public static final Method GET_NAME_WITH_ARGUMENTS;
+	
+	public static final Method THROW_EXCEPTION;
+	
+	static
+	{
+		try
+		{
+			GET_NAME = Person.class.getMethod("getName");
+			GET_NAME_WITH_ARGUMENT = Person.class.getMethod("getNameWithArgument", String.class);
+			GET_NAME_WITH_ARGUMENTS = Person.class.getMethod("getNameWithArguments", String.class, String.class);
+			THROW_EXCEPTION = Person.class.getMethod("throwException");
+		}
+		catch (NoSuchMethodException exception)
+		{
+			throw new AssertionError("Cannot find Person method", exception);
+		}
+	}
+
 	// ----------------------------------------------------------------------------------------------------------------
 	// fields
 	// ----------------------------------------------------------------------------------------------------------------
