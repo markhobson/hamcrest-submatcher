@@ -220,15 +220,6 @@ public class SubmatcherTest
 	}
 	
 	@Test
-	public void suchWithNonNullThatThrowsException()
-	{
-		thrown.expect(IllegalArgumentException.class);
-		thrown.expectMessage("that() must be the first argument to such()");
-		
-		such("x", mockMatcher());
-	}
-	
-	@Test
 	public void suchWithNullMatcherThrowsException()
 	{
 		thrown.expect(NullPointerException.class);
@@ -299,6 +290,22 @@ public class SubmatcherTest
 		Matcher<Person> actual = such(that(Person.class).getNameWithArgument("y"), is(new Name("x")));
 		
 		assertThat(actual.matches(new Person(new Name("y"))), is(false));
+	}
+	
+	@Test
+	public void suchThatMatchesWithPrimitiveWhenMatchesReturnsTrue()
+	{
+		Matcher<Person> actual = such(that(Person.class).getAge(), is(1));
+		
+		assertThat(actual.matches(new Person(1)), is(true));
+	}
+	
+	@Test
+	public void suchThatMatchesWithPrimitiveWhenDoesNotMatchReturnsFalse()
+	{
+		Matcher<Person> actual = such(that(Person.class).getAge(), is(1));
+		
+		assertThat(actual.matches(new Person(2)), is(false));
 	}
 	
 	// ----------------------------------------------------------------------------------------------------------------

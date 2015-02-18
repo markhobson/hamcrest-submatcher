@@ -53,6 +53,8 @@ public class Person
 
 	private Name name;
 	
+	private int age;
+	
 	// ----------------------------------------------------------------------------------------------------------------
 	// constructors
 	// ----------------------------------------------------------------------------------------------------------------
@@ -65,6 +67,11 @@ public class Person
 	public Person(Name name)
 	{
 		setName(name);
+	}
+	
+	public Person(int age)
+	{
+		setAge(age);
 	}
 	
 	// ----------------------------------------------------------------------------------------------------------------
@@ -89,6 +96,16 @@ public class Person
 	public Name getNameWithArguments(String arg1, String arg2)
 	{
 		return name;
+	}
+
+	public int getAge()
+	{
+		return age;
+	}
+	
+	public void setAge(int age)
+	{
+		this.age = age;
 	}
 	
 	public void throwException() throws Exception
