@@ -179,10 +179,12 @@ public class SubmatcherTest
 	@Test
 	public void matchesSafelyWhenInvokedMethodThrowsExceptionReturnsFalse()
 	{
-		MethodInvocation invocation = new MethodInvocation(Person.THROW_EXCEPTION);
+		MethodInvocation invocation = new MethodInvocation(Person.GET_NAME);
 		Submatcher<Person> submatcher = new Submatcher<Person>(invocation, mockMatcher());
+		Person person = mock(Person.class);
+		when(person.getName()).thenThrow(new RuntimeException());
 		
-		boolean actual = submatcher.matchesSafely(new Person(), Description.NONE);
+		boolean actual = submatcher.matchesSafely(person, Description.NONE);
 		
 		assertThat(actual, is(false));
 	}

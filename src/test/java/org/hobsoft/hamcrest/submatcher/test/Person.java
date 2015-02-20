@@ -30,8 +30,6 @@ public class Person
 	
 	public static final Method GET_NAME_WITH_ARGUMENTS;
 	
-	public static final Method THROW_EXCEPTION;
-	
 	static
 	{
 		try
@@ -39,7 +37,6 @@ public class Person
 			GET_NAME = Person.class.getMethod("getName");
 			GET_NAME_WITH_ARGUMENT = Person.class.getMethod("getNameWithArgument", String.class);
 			GET_NAME_WITH_ARGUMENTS = Person.class.getMethod("getNameWithArguments", String.class, String.class);
-			THROW_EXCEPTION = Person.class.getMethod("throwException");
 		}
 		catch (NoSuchMethodException exception)
 		{
@@ -106,10 +103,5 @@ public class Person
 	public void setAge(int age)
 	{
 		this.age = age;
-	}
-	
-	public void throwException() throws Exception
-	{
-		throw new Exception();
 	}
 }
