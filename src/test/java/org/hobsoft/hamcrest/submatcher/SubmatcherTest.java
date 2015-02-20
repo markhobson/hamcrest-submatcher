@@ -117,7 +117,7 @@ public class SubmatcherTest
 		MethodInvocation invocation = new MethodInvocation(Person.GET_NAME);
 		Matcher<Name> matcher = mock(Matcher.class);
 		Submatcher<Person> submatcher = new Submatcher<Person>(invocation, matcher);
-		Name name = new Name("x");
+		Name name = mock(Name.class);
 		
 		submatcher.matchesSafely(newPersonWithName(name), Description.NONE);
 
@@ -130,7 +130,7 @@ public class SubmatcherTest
 		Matcher<Name> matcher = mock(Matcher.class);
 		MethodInvocation invocation = new MethodInvocation(Person.GET_NAME_WITH_ARGUMENT, "x");
 		Submatcher<Person> submatcher = new Submatcher<Person>(invocation, matcher);
-		Name name = new Name("y");
+		Name name = mock(Name.class);
 		
 		submatcher.matchesSafely(newPersonWithName(name), Description.NONE);
 
@@ -170,11 +170,13 @@ public class SubmatcherTest
 		Matcher<Name> matcher = mock(Matcher.class);
 		when(matcher.matches(any())).thenReturn(false);
 		Submatcher<Person> submatcher = new Submatcher<Person>(invocation, matcher);
+		Name name = mock(Name.class);
+		when(name.toString()).thenReturn("x");
 		StringDescription mismatchDescription = new StringDescription();
 		
-		submatcher.matchesSafely(newPersonWithName(new Name("x")), mismatchDescription);
+		submatcher.matchesSafely(newPersonWithName(name), mismatchDescription);
 		
-		assertThat(mismatchDescription.toString(), is("was <Name[x]>"));
+		assertThat(mismatchDescription.toString(), is("was <x>"));
 	}
 
 	@Test
@@ -291,7 +293,7 @@ public class SubmatcherTest
 	@Test
 	public void suchThatMatchesWhenMatchesReturnsTrue()
 	{
-		Name name = new Name("x");
+		Name name = mock(Name.class);
 		
 		Matcher<Person> actual = such(that(Person.class).getName(), is(name));
 		
@@ -301,17 +303,17 @@ public class SubmatcherTest
 	@Test
 	public void suchThatMatchesWhenDoesNotMatchReturnsFalse()
 	{
-		Matcher<Person> actual = such(that(Person.class).getName(), is(new Name("x")));
+		Matcher<Person> actual = such(that(Person.class).getName(), is(mock(Name.class)));
 		
-		assertThat(actual.matches(newPersonWithName(new Name("y"))), is(false));
+		assertThat(actual.matches(newPersonWithName(mock(Name.class))), is(false));
 	}
 
 	@Test
 	public void suchThatMatchesWithArgumentWhenMatchesReturnsTrue()
 	{
-		Name name = new Name("x");
+		Name name = mock(Name.class);
 		
-		Matcher<Person> actual = such(that(Person.class).getNameWithArgument("y"), is(name));
+		Matcher<Person> actual = such(that(Person.class).getNameWithArgument("x"), is(name));
 		
 		assertThat(actual.matches(newPersonWithName(name)), is(true));
 	}
@@ -319,9 +321,9 @@ public class SubmatcherTest
 	@Test
 	public void suchThatMatchesWithArgumentWhenDoesNotMatchReturnsFalse()
 	{
-		Matcher<Person> actual = such(that(Person.class).getNameWithArgument("y"), is(new Name("x")));
+		Matcher<Person> actual = such(that(Person.class).getNameWithArgument("y"), is(mock(Name.class)));
 		
-		assertThat(actual.matches(newPersonWithName(new Name("y"))), is(false));
+		assertThat(actual.matches(newPersonWithName(mock(Name.class))), is(false));
 	}
 	
 	@Test

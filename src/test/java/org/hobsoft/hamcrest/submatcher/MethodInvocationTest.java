@@ -149,7 +149,7 @@ public class MethodInvocationTest
 	{
 		MethodInvocation invocation = new MethodInvocation(Person.GET_NAME);
 		Person instance = mock(Person.class);
-		Name name = new Name("x");
+		Name name = mock(Name.class);
 		when(instance.getName()).thenReturn(name);
 		
 		Object actual = invocation.invoke(instance);
