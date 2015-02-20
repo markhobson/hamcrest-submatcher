@@ -48,9 +48,9 @@ public class Person
 	// fields
 	// ----------------------------------------------------------------------------------------------------------------
 
-	private Name name;
+	private final Name name;
 	
-	private int age;
+	private final int age;
 	
 	// ----------------------------------------------------------------------------------------------------------------
 	// constructors
@@ -63,12 +63,14 @@ public class Person
 
 	public Person(Name name)
 	{
-		setName(name);
+		this.name = name;
+		age = 0;
 	}
 	
 	public Person(int age)
 	{
-		setAge(age);
+		name = null;
+		this.age = age;
 	}
 	
 	// ----------------------------------------------------------------------------------------------------------------
@@ -78,11 +80,6 @@ public class Person
 	public Name getName()
 	{
 		return name;
-	}
-	
-	public void setName(Name name)
-	{
-		this.name = name;
 	}
 	
 	public Name getNameWithArgument(String arg)
@@ -98,10 +95,5 @@ public class Person
 	public int getAge()
 	{
 		return age;
-	}
-	
-	public void setAge(int age)
-	{
-		this.age = age;
 	}
 }
