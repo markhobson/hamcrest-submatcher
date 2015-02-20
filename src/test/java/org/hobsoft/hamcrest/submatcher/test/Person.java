@@ -50,8 +50,6 @@ public class Person
 
 	private final Name name;
 	
-	private final int age;
-	
 	// ----------------------------------------------------------------------------------------------------------------
 	// constructors
 	// ----------------------------------------------------------------------------------------------------------------
@@ -64,13 +62,6 @@ public class Person
 	public Person(Name name)
 	{
 		this.name = name;
-		age = 0;
-	}
-	
-	public Person(int age)
-	{
-		name = null;
-		this.age = age;
 	}
 	
 	// ----------------------------------------------------------------------------------------------------------------
@@ -94,6 +85,6 @@ public class Person
 
 	public int getAge()
 	{
-		return age;
+		return 0;
 	}
 }

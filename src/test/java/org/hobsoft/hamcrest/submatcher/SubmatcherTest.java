@@ -328,7 +328,7 @@ public class SubmatcherTest
 	{
 		Matcher<Person> actual = such(that(Person.class).getAge(), is(1));
 		
-		assertThat(actual.matches(new Person(1)), is(true));
+		assertThat(actual.matches(newPersonWithAge(1)), is(true));
 	}
 	
 	@Test
@@ -336,13 +336,20 @@ public class SubmatcherTest
 	{
 		Matcher<Person> actual = such(that(Person.class).getAge(), is(1));
 		
-		assertThat(actual.matches(new Person(2)), is(false));
+		assertThat(actual.matches(newPersonWithAge(2)), is(false));
 	}
 	
 	// ----------------------------------------------------------------------------------------------------------------
 	// private methods
 	// ----------------------------------------------------------------------------------------------------------------
 
+	private static Person newPersonWithAge(int age)
+	{
+		Person person = mock(Person.class);
+		when(person.getAge()).thenReturn(age);
+		return person;
+	}
+	
 	private static MethodInvocation newInvocation()
 	{
 		return new MethodInvocation(someMethod());
