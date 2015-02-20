@@ -24,26 +24,14 @@ public class Person
 	// constants
 	// ----------------------------------------------------------------------------------------------------------------
 
-	public static final Method GET_NAME;
+	public static final Method GET_NAME = getMethodQuietly(Person.class, "getName");
 	
-	public static final Method GET_NAME_WITH_ARGUMENT;
+	public static final Method GET_NAME_WITH_ARGUMENT = getMethodQuietly(Person.class, "getNameWithArgument",
+		String.class);
 	
-	public static final Method GET_NAME_WITH_ARGUMENTS;
+	public static final Method GET_NAME_WITH_ARGUMENTS = getMethodQuietly(Person.class, "getNameWithArguments",
+		String.class, String.class);
 	
-	static
-	{
-		try
-		{
-			GET_NAME = Person.class.getMethod("getName");
-			GET_NAME_WITH_ARGUMENT = Person.class.getMethod("getNameWithArgument", String.class);
-			GET_NAME_WITH_ARGUMENTS = Person.class.getMethod("getNameWithArguments", String.class, String.class);
-		}
-		catch (NoSuchMethodException exception)
-		{
-			throw new AssertionError("Cannot find Person method", exception);
-		}
-	}
-
 	// ----------------------------------------------------------------------------------------------------------------
 	// public methods
 	// ----------------------------------------------------------------------------------------------------------------
@@ -66,5 +54,21 @@ public class Person
 	public int getAge()
 	{
 		return 0;
+	}
+	
+	// ----------------------------------------------------------------------------------------------------------------
+	// private methods
+	// ----------------------------------------------------------------------------------------------------------------
+
+	private static Method getMethodQuietly(Class<?> type, String name, Class<?>... parameterTypes)
+	{
+		try
+		{
+			return type.getMethod(name, parameterTypes);
+		}
+		catch (NoSuchMethodException exception)
+		{
+			throw new AssertionError("Cannot find method", exception);
+		}
 	}
 }
