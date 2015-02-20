@@ -34,6 +34,7 @@ import static org.hobsoft.hamcrest.submatcher.Submatcher.such;
 import static org.hobsoft.hamcrest.submatcher.Submatcher.that;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -118,7 +119,7 @@ public class SubmatcherTest
 		Submatcher<Person> submatcher = new Submatcher<Person>(invocation, matcher);
 		Name name = new Name("x");
 		
-		submatcher.matchesSafely(new Person(name), Description.NONE);
+		submatcher.matchesSafely(newPersonWithName(name), Description.NONE);
 
 		verify(matcher).matches(name);
 	}
@@ -131,7 +132,7 @@ public class SubmatcherTest
 		Submatcher<Person> submatcher = new Submatcher<Person>(invocation, matcher);
 		Name name = new Name("y");
 		
-		submatcher.matchesSafely(new Person(name), Description.NONE);
+		submatcher.matchesSafely(newPersonWithName(name), Description.NONE);
 
 		verify(matcher).matches(name);
 	}
@@ -171,7 +172,7 @@ public class SubmatcherTest
 		Submatcher<Person> submatcher = new Submatcher<Person>(invocation, matcher);
 		StringDescription mismatchDescription = new StringDescription();
 		
-		submatcher.matchesSafely(new Person(new Name("x")), mismatchDescription);
+		submatcher.matchesSafely(newPersonWithName(new Name("x")), mismatchDescription);
 		
 		assertThat(mismatchDescription.toString(), is("was <Name[x]>"));
 	}
@@ -294,7 +295,7 @@ public class SubmatcherTest
 		
 		Matcher<Person> actual = such(that(Person.class).getName(), is(name));
 		
-		assertThat(actual.matches(new Person(name)), is(true));
+		assertThat(actual.matches(newPersonWithName(name)), is(true));
 	}
 	
 	@Test
@@ -302,7 +303,7 @@ public class SubmatcherTest
 	{
 		Matcher<Person> actual = such(that(Person.class).getName(), is(new Name("x")));
 		
-		assertThat(actual.matches(new Person(new Name("y"))), is(false));
+		assertThat(actual.matches(newPersonWithName(new Name("y"))), is(false));
 	}
 
 	@Test
@@ -312,7 +313,7 @@ public class SubmatcherTest
 		
 		Matcher<Person> actual = such(that(Person.class).getNameWithArgument("y"), is(name));
 		
-		assertThat(actual.matches(new Person(name)), is(true));
+		assertThat(actual.matches(newPersonWithName(name)), is(true));
 	}
 	
 	@Test
@@ -320,7 +321,7 @@ public class SubmatcherTest
 	{
 		Matcher<Person> actual = such(that(Person.class).getNameWithArgument("y"), is(new Name("x")));
 		
-		assertThat(actual.matches(new Person(new Name("y"))), is(false));
+		assertThat(actual.matches(newPersonWithName(new Name("y"))), is(false));
 	}
 	
 	@Test
@@ -342,6 +343,15 @@ public class SubmatcherTest
 	// ----------------------------------------------------------------------------------------------------------------
 	// private methods
 	// ----------------------------------------------------------------------------------------------------------------
+
+	private static Person newPersonWithName(Name name)
+	{
+		Person person = mock(Person.class);
+		when(person.getName()).thenReturn(name);
+		when(person.getNameWithArgument(anyString())).thenReturn(name);
+		when(person.getNameWithArguments(anyString(), anyString())).thenReturn(name);
+		return person;
+	}
 
 	private static Person newPersonWithAge(int age)
 	{
