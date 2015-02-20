@@ -118,7 +118,7 @@ public class SubmatcherTest
 		Submatcher<Person> submatcher = new Submatcher<Person>(invocation, matcher);
 		Name name = new Name("x");
 		
-		submatcher.matchesSafely(new Person(name));
+		submatcher.matchesSafely(new Person(name), Description.NONE);
 
 		verify(matcher).matches(name);
 	}
@@ -131,7 +131,7 @@ public class SubmatcherTest
 		Submatcher<Person> submatcher = new Submatcher<Person>(invocation, matcher);
 		Name name = new Name("y");
 		
-		submatcher.matchesSafely(new Person(name));
+		submatcher.matchesSafely(new Person(name), Description.NONE);
 
 		verify(matcher).matches(name);
 	}
@@ -144,7 +144,7 @@ public class SubmatcherTest
 		when(matcher.matches(any())).thenReturn(true);
 		Submatcher<Person> submatcher = new Submatcher<Person>(invocation, matcher);
 		
-		boolean actual = submatcher.matchesSafely(new Person());
+		boolean actual = submatcher.matchesSafely(new Person(), Description.NONE);
 		
 		assertThat(actual, is(true));
 	}
@@ -157,7 +157,7 @@ public class SubmatcherTest
 		when(matcher.matches(any())).thenReturn(false);
 		Submatcher<Person> submatcher = new Submatcher<Person>(invocation, matcher);
 		
-		boolean actual = submatcher.matchesSafely(new Person());
+		boolean actual = submatcher.matchesSafely(new Person(), Description.NONE);
 		
 		assertThat(actual, is(false));
 	}
@@ -168,7 +168,7 @@ public class SubmatcherTest
 		MethodInvocation invocation = new MethodInvocation(Person.THROW_EXCEPTION);
 		Submatcher<Person> submatcher = new Submatcher<Person>(invocation, mockMatcher());
 		
-		boolean actual = submatcher.matchesSafely(new Person());
+		boolean actual = submatcher.matchesSafely(new Person(), Description.NONE);
 		
 		assertThat(actual, is(false));
 	}

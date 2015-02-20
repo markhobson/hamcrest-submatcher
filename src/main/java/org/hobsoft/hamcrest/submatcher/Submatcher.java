@@ -15,7 +15,7 @@ package org.hobsoft.hamcrest.submatcher;
 
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
-import org.hamcrest.TypeSafeMatcher;
+import org.hamcrest.TypeSafeDiagnosingMatcher;
 
 import static org.hobsoft.hamcrest.submatcher.Preconditions.checkNotNull;
 
@@ -25,7 +25,7 @@ import static org.hobsoft.hamcrest.submatcher.Preconditions.checkNotNull;
  * @param <T>
  *            the instance type
  */
-public class Submatcher<T> extends TypeSafeMatcher<T>
+public class Submatcher<T> extends TypeSafeDiagnosingMatcher<T>
 {
 	// ----------------------------------------------------------------------------------------------------------------
 	// fields
@@ -46,11 +46,11 @@ public class Submatcher<T> extends TypeSafeMatcher<T>
 	}
 
 	// ----------------------------------------------------------------------------------------------------------------
-	// TypeSafeMatcher methods
+	// TypeSafeDiagnosingMatcher methods
 	// ----------------------------------------------------------------------------------------------------------------
 
 	@Override
-	protected boolean matchesSafely(T actual)
+	protected boolean matchesSafely(T actual, Description mismatchDescription)
 	{
 		Object subactual;
 		try
