@@ -62,7 +62,15 @@ public class Submatcher<T> extends TypeSafeDiagnosingMatcher<T>
 			return false;
 		}
 		
-		return matcher.matches(subactual);
+		boolean matches = matcher.matches(subactual);
+		
+		if (!matches)
+		{
+			mismatchDescription.appendText("was ")
+				.appendValue(subactual);
+		}
+		
+		return matches;
 	}
 
 	// ----------------------------------------------------------------------------------------------------------------

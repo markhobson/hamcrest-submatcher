@@ -161,6 +161,20 @@ public class SubmatcherTest
 		
 		assertThat(actual, is(false));
 	}
+	
+	@Test
+	public void matchesSafelyWhenDoesNotMatchAppendsMismatch()
+	{
+		MethodInvocation invocation = new MethodInvocation(Person.GET_NAME);
+		Matcher<Name> matcher = mock(Matcher.class);
+		when(matcher.matches(any())).thenReturn(false);
+		Submatcher<Person> submatcher = new Submatcher<Person>(invocation, matcher);
+		StringDescription mismatchDescription = new StringDescription();
+		
+		submatcher.matchesSafely(new Person(new Name("x")), mismatchDescription);
+		
+		assertThat(mismatchDescription.toString(), is("was <Name[x]>"));
+	}
 
 	@Test
 	public void matchesSafelyWhenInvokedMethodThrowsExceptionReturnsFalse()
