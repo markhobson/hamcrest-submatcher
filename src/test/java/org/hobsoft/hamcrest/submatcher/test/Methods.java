@@ -16,43 +16,32 @@ package org.hobsoft.hamcrest.submatcher.test;
 import java.lang.reflect.Method;
 
 /**
- * Simple type for unit tests.
+ * Methods for working with methods reflectively.
  */
-public class Person
+final class Methods
 {
 	// ----------------------------------------------------------------------------------------------------------------
-	// constants
+	// constructors
 	// ----------------------------------------------------------------------------------------------------------------
 
-	public static final Method GET_NAME = Methods.getQuietly(Person.class, "getName");
-	
-	public static final Method GET_NAME_WITH_ARGUMENT = Methods.getQuietly(Person.class, "getNameWithArgument",
-		String.class);
-	
-	public static final Method GET_NAME_WITH_ARGUMENTS = Methods.getQuietly(Person.class, "getNameWithArguments",
-		String.class, String.class);
-	
+	private Methods()
+	{
+		throw new AssertionError();
+	}
+
 	// ----------------------------------------------------------------------------------------------------------------
 	// public methods
 	// ----------------------------------------------------------------------------------------------------------------
 
-	public Name getName()
+	public static Method getQuietly(Class<?> type, String name, Class<?>... parameterTypes)
 	{
-		return null;
-	}
-	
-	public Name getNameWithArgument(String arg)
-	{
-		return null;
-	}
-	
-	public Name getNameWithArguments(String arg1, String arg2)
-	{
-		return null;
-	}
-
-	public int getAge()
-	{
-		return 0;
+		try
+		{
+			return type.getMethod(name, parameterTypes);
+		}
+		catch (NoSuchMethodException exception)
+		{
+			throw new AssertionError("Cannot find method", exception);
+		}
 	}
 }
