@@ -18,41 +18,28 @@ import java.lang.reflect.Method;
 /**
  * Simple type for unit tests.
  */
-public class Person
+public interface Person
 {
 	// ----------------------------------------------------------------------------------------------------------------
 	// constants
 	// ----------------------------------------------------------------------------------------------------------------
 
-	public static final Method GET_NAME = Methods.getQuietly(Person.class, "getName");
+	Method GET_NAME = Methods.getQuietly(Person.class, "getName");
 	
-	public static final Method GET_NAME_WITH_ARGUMENT = Methods.getQuietly(Person.class, "getNameWithArgument",
+	Method GET_NAME_WITH_ARGUMENT = Methods.getQuietly(Person.class, "getNameWithArgument", String.class);
+	
+	Method GET_NAME_WITH_ARGUMENTS = Methods.getQuietly(Person.class, "getNameWithArguments", String.class,
 		String.class);
-	
-	public static final Method GET_NAME_WITH_ARGUMENTS = Methods.getQuietly(Person.class, "getNameWithArguments",
-		String.class, String.class);
 	
 	// ----------------------------------------------------------------------------------------------------------------
 	// public methods
 	// ----------------------------------------------------------------------------------------------------------------
 
-	public Name getName()
-	{
-		return null;
-	}
+	Name getName();
 	
-	public Name getNameWithArgument(String arg)
-	{
-		return null;
-	}
+	Name getNameWithArgument(String arg);
 	
-	public Name getNameWithArguments(String arg1, String arg2)
-	{
-		return null;
-	}
+	Name getNameWithArguments(String arg1, String arg2);
 
-	public int getAge()
-	{
-		return 0;
-	}
+	int getAge();
 }
