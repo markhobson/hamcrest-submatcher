@@ -145,7 +145,7 @@ public class SubmatcherTest
 		when(matcher.matches(any())).thenReturn(true);
 		Submatcher<Person> submatcher = new Submatcher<Person>(invocation, matcher);
 		
-		boolean actual = submatcher.matchesSafely(new Person(), Description.NONE);
+		boolean actual = submatcher.matchesSafely(mock(Person.class), Description.NONE);
 		
 		assertThat(actual, is(true));
 	}
@@ -158,7 +158,7 @@ public class SubmatcherTest
 		when(matcher.matches(any())).thenReturn(false);
 		Submatcher<Person> submatcher = new Submatcher<Person>(invocation, matcher);
 		
-		boolean actual = submatcher.matchesSafely(new Person(), Description.NONE);
+		boolean actual = submatcher.matchesSafely(mock(Person.class), Description.NONE);
 		
 		assertThat(actual, is(false));
 	}
