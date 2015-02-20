@@ -12,9 +12,10 @@ Single sub-property:
 	
 Multiple sub-properties:
 
-	assertThat(actual, both(such(that(Person.class).getName(), is("x")))
-		.and(such(that(Person.class).getAge(), is(1)))
-	);
+	assertThat(actual, allOf(
+		such(that(Person.class).getName(), is("x")),
+		such(that(Person.class).getAge(), is(1))
+	));
 
 Nested sub-properties:
 
