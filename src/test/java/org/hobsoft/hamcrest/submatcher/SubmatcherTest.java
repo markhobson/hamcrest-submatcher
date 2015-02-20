@@ -188,6 +188,21 @@ public class SubmatcherTest
 	}
 	
 	@Test
+	public void matchesSafelyWhenInvokedMethodThrowsExceptionAppendsMismatch()
+	{
+		MethodInvocation invocation = new MethodInvocation(Person.GET_NAME);
+		Submatcher<Person> submatcher = new Submatcher<Person>(invocation, mockMatcher());
+		Person person = mock(Person.class);
+		RuntimeException exception = new RuntimeException();
+		when(person.getName()).thenThrow(exception);
+		StringDescription mismatchDescription = new StringDescription();
+		
+		submatcher.matchesSafely(person, mismatchDescription);
+		
+		assertThat(mismatchDescription.toString(), is("threw <" + exception + ">"));
+	}
+	
+	@Test
 	public void describeToAppendsDescription()
 	{
 		MethodInvocation invocation = mock(MethodInvocation.class);

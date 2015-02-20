@@ -13,6 +13,8 @@
  */
 package org.hobsoft.hamcrest.submatcher;
 
+import java.lang.reflect.InvocationTargetException;
+
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeDiagnosingMatcher;
@@ -57,9 +59,17 @@ public class Submatcher<T> extends TypeSafeDiagnosingMatcher<T>
 		{
 			subactual = invocation.invoke(actual);
 		}
+		catch (InvocationTargetException exception)
+		{
+			mismatchDescription.appendText("threw ")
+				.appendValue(exception.getCause());
+			
+			return false;
+		}
 		catch (Exception exception)
 		{
-			return false;
+			// TODO: handle
+			throw new AssertionError();
 		}
 		
 		boolean matches = matcher.matches(subactual);
