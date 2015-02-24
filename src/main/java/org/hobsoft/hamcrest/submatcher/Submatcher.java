@@ -115,11 +115,11 @@ public class Submatcher<T, U> extends TypeSafeDiagnosingMatcher<T>
 		return new Submatcher<T, U>(invocation, matcher);
 	}
 	
-	public static <U> U that(Class<U> type)
+	public static <T> T that(Class<T> type)
 	{
 		checkNotNull(type, "type");
 		
-		Spy<U> spy = new Spy<U>(type);
+		Spy<T> spy = new Spy<T>(type);
 		
 		SpyHolder.setSpy(spy);
 		
