@@ -78,7 +78,7 @@ public class SubmatcherTest
 	{
 		MethodInvocation invocation = newInvocation();
 		
-		Submatcher<Person> actual = new Submatcher<Person>(invocation, mock(Matcher.class));
+		Submatcher<Person, Object> actual = new Submatcher<Person, Object>(invocation, mock(Matcher.class));
 		
 		assertThat(actual.getInvocation(), is(invocation));
 	}
@@ -89,15 +89,15 @@ public class SubmatcherTest
 		thrown.expect(NullPointerException.class);
 		thrown.expectMessage("invocation");
 		
-		new Submatcher<Person>(null, mock(Matcher.class));
+		new Submatcher<Person, Object>(null, mock(Matcher.class));
 	}
 	
 	@Test
 	public void constructorSetsMatcher()
 	{
-		Matcher<?> matcher = mock(Matcher.class);
+		Matcher<Object> matcher = mock(Matcher.class);
 		
-		Submatcher<?> actual = new Submatcher<Object>(newInvocation(), matcher);
+		Submatcher<?, ?> actual = new Submatcher<Object, Object>(newInvocation(), matcher);
 		
 		assertThat(actual.getMatcher(), is((Object) matcher));
 	}
@@ -108,7 +108,7 @@ public class SubmatcherTest
 		thrown.expect(NullPointerException.class);
 		thrown.expectMessage("matcher");
 		
-		new Submatcher<Object>(newInvocation(), null);
+		new Submatcher<Object, Object>(newInvocation(), null);
 	}
 	
 	@Test
@@ -116,7 +116,7 @@ public class SubmatcherTest
 	{
 		MethodInvocation invocation = new MethodInvocation(Person.GET_NAME);
 		Matcher<Name> matcher = mock(Matcher.class);
-		Submatcher<Person> submatcher = new Submatcher<Person>(invocation, matcher);
+		Submatcher<Person, Name> submatcher = new Submatcher<Person, Name>(invocation, matcher);
 		Name name = mock(Name.class);
 		
 		submatcher.matchesSafely(newPersonWithName(name), Description.NONE);
@@ -129,7 +129,7 @@ public class SubmatcherTest
 	{
 		Matcher<Name> matcher = mock(Matcher.class);
 		MethodInvocation invocation = new MethodInvocation(Person.GET_NAME_WITH_ARGUMENT, "x");
-		Submatcher<Person> submatcher = new Submatcher<Person>(invocation, matcher);
+		Submatcher<Person, Name> submatcher = new Submatcher<Person, Name>(invocation, matcher);
 		Name name = mock(Name.class);
 		
 		submatcher.matchesSafely(newPersonWithName(name), Description.NONE);
@@ -143,7 +143,7 @@ public class SubmatcherTest
 		MethodInvocation invocation = new MethodInvocation(Person.GET_NAME);
 		Matcher<Name> matcher = mock(Matcher.class);
 		when(matcher.matches(any())).thenReturn(true);
-		Submatcher<Person> submatcher = new Submatcher<Person>(invocation, matcher);
+		Submatcher<Person, Name> submatcher = new Submatcher<Person, Name>(invocation, matcher);
 		
 		boolean actual = submatcher.matchesSafely(mock(Person.class), Description.NONE);
 		
@@ -156,7 +156,7 @@ public class SubmatcherTest
 		MethodInvocation invocation = new MethodInvocation(Person.GET_NAME);
 		Matcher<Name> matcher = mock(Matcher.class);
 		when(matcher.matches(any())).thenReturn(false);
-		Submatcher<Person> submatcher = new Submatcher<Person>(invocation, matcher);
+		Submatcher<Person, Name> submatcher = new Submatcher<Person, Name>(invocation, matcher);
 		
 		boolean actual = submatcher.matchesSafely(mock(Person.class), Description.NONE);
 		
@@ -169,7 +169,7 @@ public class SubmatcherTest
 		MethodInvocation invocation = new MethodInvocation(Person.GET_NAME);
 		Matcher<Name> matcher = mock(Matcher.class);
 		when(matcher.matches(any())).thenReturn(false);
-		Submatcher<Person> submatcher = new Submatcher<Person>(invocation, matcher);
+		Submatcher<Person, Name> submatcher = new Submatcher<Person, Name>(invocation, matcher);
 		Name name = mock(Name.class);
 		when(name.toString()).thenReturn("x");
 		StringDescription mismatchDescription = new StringDescription();
@@ -183,7 +183,7 @@ public class SubmatcherTest
 	public void matchesSafelyWhenInvokedMethodThrowsExceptionReturnsFalse()
 	{
 		MethodInvocation invocation = new MethodInvocation(Person.GET_NAME);
-		Submatcher<Person> submatcher = new Submatcher<Person>(invocation, mockMatcher());
+		Submatcher<Person, Object> submatcher = new Submatcher<Person, Object>(invocation, mock(Matcher.class));
 		Person person = mock(Person.class);
 		when(person.getName()).thenThrow(new RuntimeException());
 		
@@ -196,7 +196,7 @@ public class SubmatcherTest
 	public void matchesSafelyWhenInvokedMethodThrowsExceptionAppendsMismatch()
 	{
 		MethodInvocation invocation = new MethodInvocation(Person.GET_NAME);
-		Submatcher<Person> submatcher = new Submatcher<Person>(invocation, mockMatcher());
+		Submatcher<Person, Object> submatcher = new Submatcher<Person, Object>(invocation, mock(Matcher.class));
 		Person person = mock(Person.class);
 		RuntimeException exception = new RuntimeException();
 		when(person.getName()).thenThrow(exception);
@@ -212,9 +212,9 @@ public class SubmatcherTest
 	{
 		MethodInvocation invocation = mock(MethodInvocation.class);
 		doAnswer(appendText("x")).when(invocation).describeTo(any(Description.class));
-		Matcher<?> matcher = mock(Matcher.class);
+		Matcher<Object> matcher = mock(Matcher.class);
 		doAnswer(appendText("y")).when(matcher).describeTo(any(Description.class));
-		Submatcher<Person> submatcher = new Submatcher<Person>(invocation, matcher);
+		Submatcher<Person, Object> submatcher = new Submatcher<Person, Object>(invocation, matcher);
 		StringDescription description = new StringDescription();
 		
 		submatcher.describeTo(description);
@@ -227,7 +227,7 @@ public class SubmatcherTest
 	{
 		SpyHolder.setSpy(mockSpy());
 		
-		Submatcher<?> actual = such(null, mockMatcher());
+		Submatcher<?, ?> actual = such(null, mockMatcher());
 		
 		assertThat(actual, is(instanceOf(Submatcher.class)));
 	}
@@ -237,7 +237,7 @@ public class SubmatcherTest
 	{
 		SpyHolder.setSpy(mockSpy(Person.GET_NAME));
 		
-		Submatcher<?> actual = such(null, mockMatcher());
+		Submatcher<?, ?> actual = such(null, mockMatcher());
 		
 		assertThat(actual.getInvocation().getMethod(), is(Person.GET_NAME));
 	}
@@ -248,7 +248,7 @@ public class SubmatcherTest
 		SpyHolder.setSpy(mockSpy());
 		Matcher<?> matcher = mock(Matcher.class);
 		
-		Submatcher<?> actual = such(null, matcher);
+		Submatcher<?, ?> actual = such(null, matcher);
 		
 		assertThat(actual.getMatcher(), is((Object) matcher));
 	}

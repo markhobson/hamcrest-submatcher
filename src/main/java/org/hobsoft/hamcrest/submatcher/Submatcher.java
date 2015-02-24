@@ -26,8 +26,10 @@ import static org.hobsoft.hamcrest.submatcher.Preconditions.checkNotNull;
  * 
  * @param <T>
  *            the instance type
+ * @param <U>
+ *            the sub-property type
  */
-public class Submatcher<T> extends TypeSafeDiagnosingMatcher<T>
+public class Submatcher<T, U> extends TypeSafeDiagnosingMatcher<T>
 {
 	// ----------------------------------------------------------------------------------------------------------------
 	// fields
@@ -35,13 +37,13 @@ public class Submatcher<T> extends TypeSafeDiagnosingMatcher<T>
 
 	private final MethodInvocation invocation;
 	
-	private final Matcher<?> matcher;
+	private final Matcher<U> matcher;
 
 	// ----------------------------------------------------------------------------------------------------------------
 	// constructors
 	// ----------------------------------------------------------------------------------------------------------------
 
-	Submatcher(MethodInvocation invocation, Matcher<?> matcher)
+	Submatcher(MethodInvocation invocation, Matcher<U> matcher)
 	{
 		this.invocation = checkNotNull(invocation, "invocation");
 		this.matcher = checkNotNull(matcher, "matcher");
@@ -99,7 +101,7 @@ public class Submatcher<T> extends TypeSafeDiagnosingMatcher<T>
 	// public methods
 	// ----------------------------------------------------------------------------------------------------------------
 
-	public static <T, U> Submatcher<T> such(U that, Matcher<U> matcher)
+	public static <T, U> Submatcher<T, U> such(U that, Matcher<U> matcher)
 	{
 		checkNotNull(matcher, "matcher");
 		
@@ -110,7 +112,7 @@ public class Submatcher<T> extends TypeSafeDiagnosingMatcher<T>
 		
 		MethodInvocation invocation = SpyHolder.getSpy().getInvocation();
 		
-		return new Submatcher<T>(invocation, matcher);
+		return new Submatcher<T, U>(invocation, matcher);
 	}
 	
 	public static <U> U that(Class<U> type)
@@ -133,7 +135,7 @@ public class Submatcher<T> extends TypeSafeDiagnosingMatcher<T>
 		return invocation;
 	}
 
-	Matcher<?> getMatcher()
+	Matcher<U> getMatcher()
 	{
 		return matcher;
 	}
