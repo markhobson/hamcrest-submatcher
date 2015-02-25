@@ -123,6 +123,24 @@ public class SubmatcherIntegrationTest
 	}
 	
 	@Test
+	public void matchesWithArgumentsWhenMatchesReturnsTrue()
+	{
+		Name name = mock(Name.class);
+		
+		Matcher<Person> actual = such(that(Person.class).getNameWithArguments("x", "y"), is(name));
+		
+		assertThat(actual.matches(newPersonWithName(name)), is(true));
+	}
+	
+	@Test
+	public void matchesWithArgumentsWhenDoesNotMatchReturnsFalse()
+	{
+		Matcher<Person> actual = such(that(Person.class).getNameWithArguments("x", "y"), is(mock(Name.class)));
+		
+		assertThat(actual.matches(newPersonWithName(mock(Name.class))), is(false));
+	}
+	
+	@Test
 	public void matchesWithPrimitiveWhenMatchesReturnsTrue()
 	{
 		Matcher<Person> actual = such(that(Person.class).getAge(), is(1));
