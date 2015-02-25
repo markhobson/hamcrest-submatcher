@@ -37,16 +37,16 @@ public class Submatcher<T, U> extends TypeSafeDiagnosingMatcher<T>
 
 	private final MethodInvocation invocation;
 	
-	private final Matcher<U> matcher;
+	private final Matcher<U> submatcher;
 
 	// ----------------------------------------------------------------------------------------------------------------
 	// constructors
 	// ----------------------------------------------------------------------------------------------------------------
 
-	Submatcher(MethodInvocation invocation, Matcher<U> matcher)
+	Submatcher(MethodInvocation invocation, Matcher<U> submatcher)
 	{
 		this.invocation = checkNotNull(invocation, "invocation");
-		this.matcher = checkNotNull(matcher, "matcher");
+		this.submatcher = checkNotNull(submatcher, "submatcher");
 	}
 
 	// ----------------------------------------------------------------------------------------------------------------
@@ -74,11 +74,11 @@ public class Submatcher<T, U> extends TypeSafeDiagnosingMatcher<T>
 			throw new AssertionError();
 		}
 		
-		boolean matches = matcher.matches(subactual);
+		boolean matches = submatcher.matches(subactual);
 		
 		if (!matches)
 		{
-			matcher.describeMismatch(subactual, mismatchDescription);
+			submatcher.describeMismatch(subactual, mismatchDescription);
 		}
 		
 		return matches;
@@ -93,16 +93,16 @@ public class Submatcher<T, U> extends TypeSafeDiagnosingMatcher<T>
 		description.appendText("such that ")
 			.appendDescriptionOf(invocation)
 			.appendText(" ")
-			.appendDescriptionOf(matcher);
+			.appendDescriptionOf(submatcher);
 	}
 
 	// ----------------------------------------------------------------------------------------------------------------
 	// public methods
 	// ----------------------------------------------------------------------------------------------------------------
 
-	public static <T, U> Submatcher<T, U> such(U that, Matcher<U> matcher)
+	public static <T, U> Submatcher<T, U> such(U that, Matcher<U> submatcher)
 	{
-		checkNotNull(matcher, "matcher");
+		checkNotNull(submatcher, "submatcher");
 		
 		if (!SpyHolder.hasSpy())
 		{
@@ -111,7 +111,7 @@ public class Submatcher<T, U> extends TypeSafeDiagnosingMatcher<T>
 		
 		MethodInvocation invocation = SpyHolder.getSpy().getInvocation();
 		
-		return new Submatcher<T, U>(invocation, matcher);
+		return new Submatcher<T, U>(invocation, submatcher);
 	}
 	
 	public static <T> T that(Class<T> type)
@@ -134,8 +134,8 @@ public class Submatcher<T, U> extends TypeSafeDiagnosingMatcher<T>
 		return invocation;
 	}
 
-	Matcher<U> getMatcher()
+	Matcher<U> getSubmatcher()
 	{
-		return matcher;
+		return submatcher;
 	}
 }

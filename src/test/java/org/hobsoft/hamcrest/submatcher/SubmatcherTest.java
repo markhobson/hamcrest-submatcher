@@ -94,20 +94,20 @@ public class SubmatcherTest
 	}
 	
 	@Test
-	public void constructorSetsMatcher()
+	public void constructorSetsSubmatcher()
 	{
-		Matcher<Object> matcher = mock(Matcher.class);
+		Matcher<Object> submatcher = mock(Matcher.class);
 		
-		Submatcher<?, ?> actual = new Submatcher<Object, Object>(newInvocation(), matcher);
+		Submatcher<?, ?> actual = new Submatcher<Object, Object>(newInvocation(), submatcher);
 		
-		assertThat(actual.getMatcher(), is((Object) matcher));
+		assertThat(actual.getSubmatcher(), is((Object) submatcher));
 	}
 	
 	@Test
-	public void constructorWithNullMatcherThrowsException()
+	public void constructorWithNullSubmatcherThrowsException()
 	{
 		thrown.expect(NullPointerException.class);
-		thrown.expectMessage("matcher");
+		thrown.expectMessage("submatcher");
 		
 		new Submatcher<Object, Object>(newInvocation(), null);
 	}
@@ -116,37 +116,37 @@ public class SubmatcherTest
 	public void matchesSafelyInvokesSubmatcher()
 	{
 		MethodInvocation invocation = new MethodInvocation(Person.GET_NAME);
-		Matcher<Name> matcher = mock(Matcher.class);
-		Submatcher<Person, Name> submatcher = new Submatcher<Person, Name>(invocation, matcher);
+		Matcher<Name> submatcher = mock(Matcher.class);
+		Submatcher<Person, Name> matcher = new Submatcher<Person, Name>(invocation, submatcher);
 		Name name = mock(Name.class);
 		
-		submatcher.matchesSafely(newPersonWithName(name), Description.NONE);
+		matcher.matchesSafely(newPersonWithName(name), Description.NONE);
 
-		verify(matcher).matches(name);
+		verify(submatcher).matches(name);
 	}
 	
 	@Test
 	public void matchesSafelyWhenArgumentInvokesSubmatcher()
 	{
-		Matcher<Name> matcher = mock(Matcher.class);
+		Matcher<Name> submatcher = mock(Matcher.class);
 		MethodInvocation invocation = new MethodInvocation(Person.GET_NAME_WITH_ARGUMENT, "x");
-		Submatcher<Person, Name> submatcher = new Submatcher<Person, Name>(invocation, matcher);
+		Submatcher<Person, Name> matcher = new Submatcher<Person, Name>(invocation, submatcher);
 		Name name = mock(Name.class);
 		
-		submatcher.matchesSafely(newPersonWithName(name), Description.NONE);
+		matcher.matchesSafely(newPersonWithName(name), Description.NONE);
 
-		verify(matcher).matches(name);
+		verify(submatcher).matches(name);
 	}
 	
 	@Test
 	public void matchesSafelyWhenMatchesReturnsTrue()
 	{
 		MethodInvocation invocation = new MethodInvocation(Person.GET_NAME);
-		Matcher<Name> matcher = mock(Matcher.class);
-		when(matcher.matches(any())).thenReturn(true);
-		Submatcher<Person, Name> submatcher = new Submatcher<Person, Name>(invocation, matcher);
+		Matcher<Name> submatcher = mock(Matcher.class);
+		when(submatcher.matches(any())).thenReturn(true);
+		Submatcher<Person, Name> matcher = new Submatcher<Person, Name>(invocation, submatcher);
 		
-		boolean actual = submatcher.matchesSafely(mock(Person.class), Description.NONE);
+		boolean actual = matcher.matchesSafely(mock(Person.class), Description.NONE);
 		
 		assertThat(actual, is(true));
 	}
@@ -155,11 +155,11 @@ public class SubmatcherTest
 	public void matchesSafelyWhenDoesNotMatchReturnsFalse()
 	{
 		MethodInvocation invocation = new MethodInvocation(Person.GET_NAME);
-		Matcher<Name> matcher = mock(Matcher.class);
-		when(matcher.matches(any())).thenReturn(false);
-		Submatcher<Person, Name> submatcher = new Submatcher<Person, Name>(invocation, matcher);
+		Matcher<Name> submatcher = mock(Matcher.class);
+		when(submatcher.matches(any())).thenReturn(false);
+		Submatcher<Person, Name> matcher = new Submatcher<Person, Name>(invocation, submatcher);
 		
-		boolean actual = submatcher.matchesSafely(mock(Person.class), Description.NONE);
+		boolean actual = matcher.matchesSafely(mock(Person.class), Description.NONE);
 		
 		assertThat(actual, is(false));
 	}
@@ -168,13 +168,13 @@ public class SubmatcherTest
 	public void matchesSafelyWhenDoesNotMatchAppendsMismatch()
 	{
 		MethodInvocation invocation = new MethodInvocation(Person.GET_NAME);
-		Matcher<Name> matcher = mock(Matcher.class);
-		when(matcher.matches(any())).thenReturn(false);
-		doAnswer(appendText(1, "x")).when(matcher).describeMismatch(anyObject(), any(Description.class));
-		Submatcher<Person, Name> submatcher = new Submatcher<Person, Name>(invocation, matcher);
+		Matcher<Name> submatcher = mock(Matcher.class);
+		when(submatcher.matches(any())).thenReturn(false);
+		doAnswer(appendText(1, "x")).when(submatcher).describeMismatch(anyObject(), any(Description.class));
+		Submatcher<Person, Name> matcher = new Submatcher<Person, Name>(invocation, submatcher);
 		StringDescription mismatchDescription = new StringDescription();
 		
-		submatcher.matchesSafely(newPersonWithName(mock(Name.class)), mismatchDescription);
+		matcher.matchesSafely(newPersonWithName(mock(Name.class)), mismatchDescription);
 		
 		assertThat(mismatchDescription.toString(), is("x"));
 	}
@@ -183,11 +183,11 @@ public class SubmatcherTest
 	public void matchesSafelyWhenInvokedMethodThrowsExceptionReturnsFalse()
 	{
 		MethodInvocation invocation = new MethodInvocation(Person.GET_NAME);
-		Submatcher<Person, Object> submatcher = new Submatcher<Person, Object>(invocation, mock(Matcher.class));
+		Submatcher<Person, Object> matcher = new Submatcher<Person, Object>(invocation, mock(Matcher.class));
 		Person person = mock(Person.class);
 		when(person.getName()).thenThrow(new RuntimeException());
 		
-		boolean actual = submatcher.matchesSafely(person, Description.NONE);
+		boolean actual = matcher.matchesSafely(person, Description.NONE);
 		
 		assertThat(actual, is(false));
 	}
@@ -196,13 +196,13 @@ public class SubmatcherTest
 	public void matchesSafelyWhenInvokedMethodThrowsExceptionAppendsMismatch()
 	{
 		MethodInvocation invocation = new MethodInvocation(Person.GET_NAME);
-		Submatcher<Person, Object> submatcher = new Submatcher<Person, Object>(invocation, mock(Matcher.class));
+		Submatcher<Person, Object> matcher = new Submatcher<Person, Object>(invocation, mock(Matcher.class));
 		Person person = mock(Person.class);
 		RuntimeException exception = new RuntimeException();
 		when(person.getName()).thenThrow(exception);
 		StringDescription mismatchDescription = new StringDescription();
 		
-		submatcher.matchesSafely(person, mismatchDescription);
+		matcher.matchesSafely(person, mismatchDescription);
 		
 		assertThat(mismatchDescription.toString(), is("threw <" + exception + ">"));
 	}
@@ -212,18 +212,18 @@ public class SubmatcherTest
 	{
 		MethodInvocation invocation = mock(MethodInvocation.class);
 		doAnswer(appendText(0, "x")).when(invocation).describeTo(any(Description.class));
-		Matcher<Object> matcher = mock(Matcher.class);
-		doAnswer(appendText(0, "y")).when(matcher).describeTo(any(Description.class));
-		Submatcher<Person, Object> submatcher = new Submatcher<Person, Object>(invocation, matcher);
+		Matcher<Object> submatcher = mock(Matcher.class);
+		doAnswer(appendText(0, "y")).when(submatcher).describeTo(any(Description.class));
+		Submatcher<Person, Object> matcher = new Submatcher<Person, Object>(invocation, submatcher);
 		StringDescription description = new StringDescription();
 		
-		submatcher.describeTo(description);
+		matcher.describeTo(description);
 		
 		assertThat(description.toString(), is("such that x y"));
 	}
 
 	@Test
-	public void suchReturnsSubmatcher()
+	public void suchReturnsMatcher()
 	{
 		SpyHolder.setSpy(mockSpy());
 		
@@ -233,7 +233,7 @@ public class SubmatcherTest
 	}
 	
 	@Test
-	public void suchReturnsSubmatcherWithInvocation()
+	public void suchReturnsMatcherWithInvocation()
 	{
 		SpyHolder.setSpy(mockSpy(Person.GET_NAME));
 		
@@ -243,21 +243,21 @@ public class SubmatcherTest
 	}
 	
 	@Test
-	public void suchReturnsSubmatcherWithMatcher()
+	public void suchReturnsMatcherWithSubmatcher()
 	{
 		SpyHolder.setSpy(mockSpy());
-		Matcher<?> matcher = mock(Matcher.class);
+		Matcher<?> submatcher = mock(Matcher.class);
 		
-		Submatcher<?, ?> actual = such(null, matcher);
+		Submatcher<?, ?> actual = such(null, submatcher);
 		
-		assertThat(actual.getMatcher(), is((Object) matcher));
+		assertThat(actual.getSubmatcher(), is((Object) submatcher));
 	}
 	
 	@Test
-	public void suchWithNullMatcherThrowsException()
+	public void suchWithNullSubmatcherThrowsException()
 	{
 		thrown.expect(NullPointerException.class);
-		thrown.expectMessage("matcher");
+		thrown.expectMessage("submatcher");
 		
 		such(null, null);
 	}
