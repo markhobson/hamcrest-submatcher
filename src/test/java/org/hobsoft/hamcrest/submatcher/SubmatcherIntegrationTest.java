@@ -156,6 +156,17 @@ public class SubmatcherIntegrationTest
 		assertThat(actual.matches(newPersonWithAge(2)), is(false));
 	}
 	
+	@Test
+	public void describeMismatchAppendsMismatch()
+	{
+		Matcher<Person> matcher = such(that(Person.class).getName(), is(mock(Name.class)));
+		StringDescription mismatchDescription = new StringDescription();
+
+		matcher.describeMismatch(newPersonWithName(newName("x")), mismatchDescription);
+		
+		assertThat(mismatchDescription.toString(), is("was <x>"));
+	}
+	
 	// ----------------------------------------------------------------------------------------------------------------
 	// private methods
 	// ----------------------------------------------------------------------------------------------------------------
