@@ -117,7 +117,7 @@ public class SubmatcherIntegrationTest
 	@Test
 	public void matchesWithArgumentWhenDoesNotMatchReturnsFalse()
 	{
-		Matcher<Person> actual = such(that(Person.class).getNameWithArgument("y"), is(mock(Name.class)));
+		Matcher<Person> actual = such(that(Person.class).getNameWithArgument("x"), is(mock(Name.class)));
 		
 		assertThat(actual.matches(newPersonWithName(mock(Name.class))), is(false));
 	}
