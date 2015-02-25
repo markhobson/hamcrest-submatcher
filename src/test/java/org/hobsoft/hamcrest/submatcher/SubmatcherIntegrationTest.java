@@ -14,6 +14,7 @@
 package org.hobsoft.hamcrest.submatcher;
 
 import org.hamcrest.Matcher;
+import org.hamcrest.StringDescription;
 import org.hobsoft.hamcrest.submatcher.test.Name;
 import org.hobsoft.hamcrest.submatcher.test.Person;
 import org.junit.Rule;
@@ -51,6 +52,39 @@ public class SubmatcherIntegrationTest
 	// ----------------------------------------------------------------------------------------------------------------
 	// tests
 	// ----------------------------------------------------------------------------------------------------------------
+	
+	@Test
+	public void describeToAppendsDescription()
+	{
+		Matcher<Person> matcher = such(that(Person.class).getName(), is(newName("x")));
+		StringDescription description = new StringDescription();
+		
+		matcher.describeTo(description);
+		
+		assertThat(description.toString(), is("such that getName() is <x>"));
+	}
+	
+	@Test
+	public void describeToWithArgumentAppendsDescription()
+	{
+		Matcher<Person> matcher = such(that(Person.class).getNameWithArgument("x"), is(newName("y")));
+		StringDescription description = new StringDescription();
+		
+		matcher.describeTo(description);
+		
+		assertThat(description.toString(), is("such that getNameWithArgument(\"x\") is <y>"));
+	}
+	
+	@Test
+	public void describeToWithArgumentsAppendsDescription()
+	{
+		Matcher<Person> matcher = such(that(Person.class).getNameWithArguments("x", "y"), is(newName("z")));
+		StringDescription description = new StringDescription();
+		
+		matcher.describeTo(description);
+		
+		assertThat(description.toString(), is("such that getNameWithArguments(\"x\", \"y\") is <z>"));
+	}
 	
 	@Test
 	public void matchesWhenMatchesReturnsTrue()
@@ -122,5 +156,12 @@ public class SubmatcherIntegrationTest
 		Person person = mock(Person.class);
 		when(person.getAge()).thenReturn(age);
 		return person;
+	}
+	
+	private static Name newName(String string)
+	{
+		Name name = mock(Name.class);
+		when(name.toString()).thenReturn(string);
+		return name;
 	}
 }
