@@ -290,58 +290,6 @@ public class SubmatcherTest
 		that(null);
 	}
 	
-	@Test
-	public void suchThatMatchesWhenMatchesReturnsTrue()
-	{
-		Name name = mock(Name.class);
-		
-		Matcher<Person> actual = such(that(Person.class).getName(), is(name));
-		
-		assertThat(actual.matches(newPersonWithName(name)), is(true));
-	}
-	
-	@Test
-	public void suchThatMatchesWhenDoesNotMatchReturnsFalse()
-	{
-		Matcher<Person> actual = such(that(Person.class).getName(), is(mock(Name.class)));
-		
-		assertThat(actual.matches(newPersonWithName(mock(Name.class))), is(false));
-	}
-
-	@Test
-	public void suchThatMatchesWithArgumentWhenMatchesReturnsTrue()
-	{
-		Name name = mock(Name.class);
-		
-		Matcher<Person> actual = such(that(Person.class).getNameWithArgument("x"), is(name));
-		
-		assertThat(actual.matches(newPersonWithName(name)), is(true));
-	}
-	
-	@Test
-	public void suchThatMatchesWithArgumentWhenDoesNotMatchReturnsFalse()
-	{
-		Matcher<Person> actual = such(that(Person.class).getNameWithArgument("y"), is(mock(Name.class)));
-		
-		assertThat(actual.matches(newPersonWithName(mock(Name.class))), is(false));
-	}
-	
-	@Test
-	public void suchThatMatchesWithPrimitiveWhenMatchesReturnsTrue()
-	{
-		Matcher<Person> actual = such(that(Person.class).getAge(), is(1));
-		
-		assertThat(actual.matches(newPersonWithAge(1)), is(true));
-	}
-	
-	@Test
-	public void suchThatMatchesWithPrimitiveWhenDoesNotMatchReturnsFalse()
-	{
-		Matcher<Person> actual = such(that(Person.class).getAge(), is(1));
-		
-		assertThat(actual.matches(newPersonWithAge(2)), is(false));
-	}
-	
 	// ----------------------------------------------------------------------------------------------------------------
 	// private methods
 	// ----------------------------------------------------------------------------------------------------------------
@@ -355,13 +303,6 @@ public class SubmatcherTest
 		return person;
 	}
 
-	private static Person newPersonWithAge(int age)
-	{
-		Person person = mock(Person.class);
-		when(person.getAge()).thenReturn(age);
-		return person;
-	}
-	
 	private static MethodInvocation newInvocation()
 	{
 		return new MethodInvocation(someMethod());
