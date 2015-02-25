@@ -141,7 +141,7 @@ public class SubmatcherIntegrationTest
 	}
 	
 	@Test
-	public void matchesWithPrimitiveWhenMatchesReturnsTrue()
+	public void matchesWhenPrimitiveAndMatchesReturnsTrue()
 	{
 		Matcher<Person> actual = such(that(Person.class).getAge(), is(1));
 		
@@ -149,7 +149,7 @@ public class SubmatcherIntegrationTest
 	}
 	
 	@Test
-	public void matchesWithPrimitiveWhenDoesNotMatchReturnsFalse()
+	public void matchesWhenPrimitiveAndDoesNotMatchReturnsFalse()
 	{
 		Matcher<Person> actual = such(that(Person.class).getAge(), is(1));
 		
