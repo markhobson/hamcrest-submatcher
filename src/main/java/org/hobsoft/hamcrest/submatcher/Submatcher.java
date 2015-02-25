@@ -78,8 +78,7 @@ public class Submatcher<T, U> extends TypeSafeDiagnosingMatcher<T>
 		
 		if (!matches)
 		{
-			mismatchDescription.appendText("was ")
-				.appendValue(subactual);
+			matcher.describeMismatch(subactual, mismatchDescription);
 		}
 		
 		return matches;

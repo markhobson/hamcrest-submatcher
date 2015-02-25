@@ -34,6 +34,7 @@ import static org.hobsoft.hamcrest.submatcher.Submatcher.such;
 import static org.hobsoft.hamcrest.submatcher.Submatcher.that;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.mock;
@@ -169,14 +170,13 @@ public class SubmatcherTest
 		MethodInvocation invocation = new MethodInvocation(Person.GET_NAME);
 		Matcher<Name> matcher = mock(Matcher.class);
 		when(matcher.matches(any())).thenReturn(false);
+		doAnswer(appendText(1, "x")).when(matcher).describeMismatch(anyObject(), any(Description.class));
 		Submatcher<Person, Name> submatcher = new Submatcher<Person, Name>(invocation, matcher);
-		Name name = mock(Name.class);
-		when(name.toString()).thenReturn("x");
 		StringDescription mismatchDescription = new StringDescription();
 		
-		submatcher.matchesSafely(newPersonWithName(name), mismatchDescription);
+		submatcher.matchesSafely(newPersonWithName(mock(Name.class)), mismatchDescription);
 		
-		assertThat(mismatchDescription.toString(), is("was <x>"));
+		assertThat(mismatchDescription.toString(), is("x"));
 	}
 
 	@Test
@@ -211,9 +211,9 @@ public class SubmatcherTest
 	public void describeToAppendsDescription()
 	{
 		MethodInvocation invocation = mock(MethodInvocation.class);
-		doAnswer(appendText("x")).when(invocation).describeTo(any(Description.class));
+		doAnswer(appendText(0, "x")).when(invocation).describeTo(any(Description.class));
 		Matcher<Object> matcher = mock(Matcher.class);
-		doAnswer(appendText("y")).when(matcher).describeTo(any(Description.class));
+		doAnswer(appendText(0, "y")).when(matcher).describeTo(any(Description.class));
 		Submatcher<Person, Object> submatcher = new Submatcher<Person, Object>(invocation, matcher);
 		StringDescription description = new StringDescription();
 		
@@ -330,13 +330,13 @@ public class SubmatcherTest
 		return spy;
 	}
 
-	private static Answer<Object> appendText(final String text)
+	private static Answer<Object> appendText(final int descriptionIndex, final String text)
 	{
 		return new Answer<Object>()
 		{
 			public Object answer(InvocationOnMock invocation)
 			{
-				Description description = invocation.getArgumentAt(0, Description.class);
+				Description description = invocation.getArgumentAt(descriptionIndex, Description.class);
 				description.appendText(text);
 				return null;
 			}
