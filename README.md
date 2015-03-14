@@ -22,3 +22,5 @@ Nested sub-properties:
 	assertThat(actual, such(that(Person.class).getAddress(),
 		such(that(Address.class).getCity(), is("x"))
 	));
+
+[![Build Status](https://travis-ci.org/markhobson/hamcrest-submatcher.svg?branch=master)](https://travis-ci.org/markhobson/hamcrest-submatcher)
