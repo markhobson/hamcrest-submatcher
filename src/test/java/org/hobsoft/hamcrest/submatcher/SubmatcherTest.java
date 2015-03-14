@@ -28,6 +28,7 @@ import org.mockito.stubbing.Answer;
 
 import net.sf.cglib.proxy.Factory;
 
+import static org.hamcrest.CoreMatchers.anything;
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hobsoft.hamcrest.submatcher.Submatcher.such;
@@ -212,9 +213,7 @@ public class SubmatcherTest
 	{
 		MethodInvocation invocation = mock(MethodInvocation.class);
 		doAnswer(appendText(0, "x")).when(invocation).describeTo(any(Description.class));
-		Matcher<Object> submatcher = mock(Matcher.class);
-		doAnswer(appendText(0, "y")).when(submatcher).describeTo(any(Description.class));
-		Submatcher<Person, Object> matcher = new Submatcher<Person, Object>(invocation, submatcher);
+		Submatcher<Person, Object> matcher = new Submatcher<Person, Object>(invocation, anything("y"));
 		StringDescription description = new StringDescription();
 		
 		matcher.describeTo(description);
