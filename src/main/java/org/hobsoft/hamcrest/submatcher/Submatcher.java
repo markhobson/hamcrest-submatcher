@@ -90,7 +90,7 @@ public class Submatcher<T, U> extends TypeSafeDiagnosingMatcher<T>
 
 	public void describeTo(Description description)
 	{
-		description.appendText("has value that ")
+		description.appendText("has value ")
 			.appendDescriptionOf(invocation)
 			.appendText(" ")
 			.appendDescriptionOf(submatcher);
@@ -100,13 +100,13 @@ public class Submatcher<T, U> extends TypeSafeDiagnosingMatcher<T>
 	// public methods
 	// ----------------------------------------------------------------------------------------------------------------
 
-	public static <T, U> Submatcher<T, U> hasValue(U that, Matcher<U> submatcher)
+	public static <T, U> Submatcher<T, U> hasValue(U on, Matcher<U> submatcher)
 	{
 		checkNotNull(submatcher, "submatcher");
 		
 		if (!SpyHolder.hasSpy())
 		{
-			throw new IllegalStateException("that() must be invoked before hasValue()");
+			throw new IllegalStateException("on() must be invoked before hasValue()");
 		}
 		
 		MethodInvocation invocation = SpyHolder.getSpy().getInvocation();
@@ -114,7 +114,7 @@ public class Submatcher<T, U> extends TypeSafeDiagnosingMatcher<T>
 		return new Submatcher<T, U>(invocation, submatcher);
 	}
 	
-	public static <T> T that(Class<T> type)
+	public static <T> T on(Class<T> type)
 	{
 		checkNotNull(type, "type");
 		

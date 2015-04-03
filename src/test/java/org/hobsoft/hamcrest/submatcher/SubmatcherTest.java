@@ -32,7 +32,7 @@ import static org.hamcrest.CoreMatchers.anything;
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hobsoft.hamcrest.submatcher.Submatcher.hasValue;
-import static org.hobsoft.hamcrest.submatcher.Submatcher.that;
+import static org.hobsoft.hamcrest.submatcher.Submatcher.on;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyObject;
@@ -218,7 +218,7 @@ public class SubmatcherTest
 		
 		matcher.describeTo(description);
 		
-		assertThat(description.toString(), is("has value that x y"));
+		assertThat(description.toString(), is("has value x y"));
 	}
 
 	@Test
@@ -267,26 +267,26 @@ public class SubmatcherTest
 		SpyHolder.setSpy(null);
 		
 		thrown.expect(IllegalStateException.class);
-		thrown.expectMessage("that() must be invoked before hasValue()");
+		thrown.expectMessage("on() must be invoked before hasValue()");
 		
 		hasValue(null, mockMatcher());
 	}
 	
 	@Test
-	public void thatReturnsSpy()
+	public void onReturnsSpy()
 	{
-		Person actual = that(Person.class);
+		Person actual = on(Person.class);
 		
 		assertThat(((Factory) actual).getCallback(0), is(instanceOf(Spy.class)));
 	}
 	
 	@Test
-	public void thatWithNullThrowsException()
+	public void onWithNullThrowsException()
 	{
 		thrown.expect(NullPointerException.class);
 		thrown.expectMessage("type");
 		
-		that(null);
+		on(null);
 	}
 	
 	// ----------------------------------------------------------------------------------------------------------------

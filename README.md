@@ -8,19 +8,19 @@ Usage
 
 Single sub-property:
 
-	assertThat(actual, hasValue(that(Person.class).getName(), is("x")));
+	assertThat(actual, hasValue(on(Person.class).getName(), is("x")));
 	
 Multiple sub-properties:
 
 	assertThat(actual, allOf(
-		hasValue(that(Person.class).getName(), is("x")),
-		hasValue(that(Person.class).getAge(), is(1))
+		hasValue(on(Person.class).getName(), is("x")),
+		hasValue(on(Person.class).getAge(), is(1))
 	));
 
 Nested sub-properties:
 
-	assertThat(actual, hasValue(that(Person.class).getAddress(),
-		hasValue(that(Address.class).getCity(), is("x"))
+	assertThat(actual, hasValue(on(Person.class).getAddress(),
+		hasValue(on(Address.class).getCity(), is("x"))
 	));
 
 License
