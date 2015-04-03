@@ -31,7 +31,7 @@ import net.sf.cglib.proxy.Factory;
 import static org.hamcrest.CoreMatchers.anything;
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.CoreMatchers.is;
-import static org.hobsoft.hamcrest.submatcher.Submatcher.such;
+import static org.hobsoft.hamcrest.submatcher.Submatcher.hasValue;
 import static org.hobsoft.hamcrest.submatcher.Submatcher.that;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.any;
@@ -218,58 +218,58 @@ public class SubmatcherTest
 		
 		matcher.describeTo(description);
 		
-		assertThat(description.toString(), is("such that x y"));
+		assertThat(description.toString(), is("has value that x y"));
 	}
 
 	@Test
-	public void suchReturnsMatcher()
+	public void hasValueReturnsMatcher()
 	{
 		SpyHolder.setSpy(mockSpy());
 		
-		Submatcher<?, ?> actual = such(null, mockMatcher());
+		Submatcher<?, ?> actual = hasValue(null, mockMatcher());
 		
 		assertThat(actual, is(instanceOf(Submatcher.class)));
 	}
 	
 	@Test
-	public void suchReturnsMatcherWithInvocation()
+	public void hasValueReturnsMatcherWithInvocation()
 	{
 		SpyHolder.setSpy(mockSpy(Person.GET_NAME));
 		
-		Submatcher<?, ?> actual = such(null, mockMatcher());
+		Submatcher<?, ?> actual = hasValue(null, mockMatcher());
 		
 		assertThat(actual.getInvocation().getMethod(), is(Person.GET_NAME));
 	}
 	
 	@Test
-	public void suchReturnsMatcherWithSubmatcher()
+	public void hasValueReturnsMatcherWithSubmatcher()
 	{
 		SpyHolder.setSpy(mockSpy());
 		Matcher<?> submatcher = mock(Matcher.class);
 		
-		Submatcher<?, ?> actual = such(null, submatcher);
+		Submatcher<?, ?> actual = hasValue(null, submatcher);
 		
 		assertThat(actual.getSubmatcher(), is((Object) submatcher));
 	}
 	
 	@Test
-	public void suchWithNullSubmatcherThrowsException()
+	public void hasValueWithNullSubmatcherThrowsException()
 	{
 		thrown.expect(NullPointerException.class);
 		thrown.expectMessage("submatcher");
 		
-		such(null, null);
+		hasValue(null, null);
 	}
 	
 	@Test
-	public void suchWhenNullSpyThrowsException()
+	public void hasValueWhenNullSpyThrowsException()
 	{
 		SpyHolder.setSpy(null);
 		
 		thrown.expect(IllegalStateException.class);
-		thrown.expectMessage("that() must be invoked before such()");
+		thrown.expectMessage("that() must be invoked before hasValue()");
 		
-		such(null, mockMatcher());
+		hasValue(null, mockMatcher());
 	}
 	
 	@Test

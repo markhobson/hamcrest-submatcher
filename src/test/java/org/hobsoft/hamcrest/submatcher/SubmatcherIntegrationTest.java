@@ -21,7 +21,7 @@ import org.junit.Rule;
 import org.junit.Test;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.hobsoft.hamcrest.submatcher.Submatcher.such;
+import static org.hobsoft.hamcrest.submatcher.Submatcher.hasValue;
 import static org.hobsoft.hamcrest.submatcher.Submatcher.that;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.anyString;
@@ -56,34 +56,34 @@ public class SubmatcherIntegrationTest
 	@Test
 	public void describeToAppendsDescription()
 	{
-		Matcher<Person> matcher = such(that(Person.class).getName(), is(newName("x")));
+		Matcher<Person> matcher = hasValue(that(Person.class).getName(), is(newName("x")));
 		StringDescription description = new StringDescription();
 		
 		matcher.describeTo(description);
 		
-		assertThat(description.toString(), is("such that getName() is <x>"));
+		assertThat(description.toString(), is("has value that getName() is <x>"));
 	}
 	
 	@Test
 	public void describeToWithArgumentAppendsDescription()
 	{
-		Matcher<Person> matcher = such(that(Person.class).getNameWithArgument("x"), is(newName("y")));
+		Matcher<Person> matcher = hasValue(that(Person.class).getNameWithArgument("x"), is(newName("y")));
 		StringDescription description = new StringDescription();
 		
 		matcher.describeTo(description);
 		
-		assertThat(description.toString(), is("such that getNameWithArgument(\"x\") is <y>"));
+		assertThat(description.toString(), is("has value that getNameWithArgument(\"x\") is <y>"));
 	}
 	
 	@Test
 	public void describeToWithArgumentsAppendsDescription()
 	{
-		Matcher<Person> matcher = such(that(Person.class).getNameWithArguments("x", "y"), is(newName("z")));
+		Matcher<Person> matcher = hasValue(that(Person.class).getNameWithArguments("x", "y"), is(newName("z")));
 		StringDescription description = new StringDescription();
 		
 		matcher.describeTo(description);
 		
-		assertThat(description.toString(), is("such that getNameWithArguments(\"x\", \"y\") is <z>"));
+		assertThat(description.toString(), is("has value that getNameWithArguments(\"x\", \"y\") is <z>"));
 	}
 	
 	@Test
@@ -91,7 +91,7 @@ public class SubmatcherIntegrationTest
 	{
 		Name name = mock(Name.class);
 		
-		Matcher<Person> actual = such(that(Person.class).getName(), is(name));
+		Matcher<Person> actual = hasValue(that(Person.class).getName(), is(name));
 		
 		assertThat(actual.matches(newPersonWithName(name)), is(true));
 	}
@@ -99,7 +99,7 @@ public class SubmatcherIntegrationTest
 	@Test
 	public void matchesWhenDoesNotMatchReturnsFalse()
 	{
-		Matcher<Person> actual = such(that(Person.class).getName(), is(mock(Name.class)));
+		Matcher<Person> actual = hasValue(that(Person.class).getName(), is(mock(Name.class)));
 		
 		assertThat(actual.matches(newPersonWithName(mock(Name.class))), is(false));
 	}
@@ -109,7 +109,7 @@ public class SubmatcherIntegrationTest
 	{
 		Name name = mock(Name.class);
 		
-		Matcher<Person> actual = such(that(Person.class).getNameWithArgument("x"), is(name));
+		Matcher<Person> actual = hasValue(that(Person.class).getNameWithArgument("x"), is(name));
 		
 		assertThat(actual.matches(newPersonWithName(name)), is(true));
 	}
@@ -117,7 +117,7 @@ public class SubmatcherIntegrationTest
 	@Test
 	public void matchesWithArgumentWhenDoesNotMatchReturnsFalse()
 	{
-		Matcher<Person> actual = such(that(Person.class).getNameWithArgument("x"), is(mock(Name.class)));
+		Matcher<Person> actual = hasValue(that(Person.class).getNameWithArgument("x"), is(mock(Name.class)));
 		
 		assertThat(actual.matches(newPersonWithName(mock(Name.class))), is(false));
 	}
@@ -127,7 +127,7 @@ public class SubmatcherIntegrationTest
 	{
 		Name name = mock(Name.class);
 		
-		Matcher<Person> actual = such(that(Person.class).getNameWithArguments("x", "y"), is(name));
+		Matcher<Person> actual = hasValue(that(Person.class).getNameWithArguments("x", "y"), is(name));
 		
 		assertThat(actual.matches(newPersonWithName(name)), is(true));
 	}
@@ -135,7 +135,7 @@ public class SubmatcherIntegrationTest
 	@Test
 	public void matchesWithArgumentsWhenDoesNotMatchReturnsFalse()
 	{
-		Matcher<Person> actual = such(that(Person.class).getNameWithArguments("x", "y"), is(mock(Name.class)));
+		Matcher<Person> actual = hasValue(that(Person.class).getNameWithArguments("x", "y"), is(mock(Name.class)));
 		
 		assertThat(actual.matches(newPersonWithName(mock(Name.class))), is(false));
 	}
@@ -143,7 +143,7 @@ public class SubmatcherIntegrationTest
 	@Test
 	public void matchesWhenPrimitiveAndMatchesReturnsTrue()
 	{
-		Matcher<Person> actual = such(that(Person.class).getAge(), is(1));
+		Matcher<Person> actual = hasValue(that(Person.class).getAge(), is(1));
 		
 		assertThat(actual.matches(newPersonWithAge(1)), is(true));
 	}
@@ -151,7 +151,7 @@ public class SubmatcherIntegrationTest
 	@Test
 	public void matchesWhenPrimitiveAndDoesNotMatchReturnsFalse()
 	{
-		Matcher<Person> actual = such(that(Person.class).getAge(), is(1));
+		Matcher<Person> actual = hasValue(that(Person.class).getAge(), is(1));
 		
 		assertThat(actual.matches(newPersonWithAge(2)), is(false));
 	}
@@ -159,7 +159,7 @@ public class SubmatcherIntegrationTest
 	@Test
 	public void describeMismatchAppendsMismatch()
 	{
-		Matcher<Person> matcher = such(that(Person.class).getName(), is(mock(Name.class)));
+		Matcher<Person> matcher = hasValue(that(Person.class).getName(), is(mock(Name.class)));
 		StringDescription mismatchDescription = new StringDescription();
 
 		matcher.describeMismatch(newPersonWithName(newName("x")), mismatchDescription);
