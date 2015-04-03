@@ -22,12 +22,12 @@ import org.hamcrest.TypeSafeDiagnosingMatcher;
 import static org.hobsoft.hamcrest.submatcher.Preconditions.checkNotNull;
 
 /**
- * Matcher for a sub-property of an instance.
+ * Matcher for a method value of an instance.
  * 
  * @param <T>
  *            the instance type
  * @param <U>
- *            the sub-property type
+ *            the method value type
  */
 public class HasValueMatcher<T, U> extends TypeSafeDiagnosingMatcher<T>
 {

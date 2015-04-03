@@ -1,23 +1,23 @@
 hamcrest-submatcher
 ===================
 
-Type-safe Hamcrest matcher for sub-properties.
+Type-safe Hamcrest matcher for method values.
 
 Usage
 -----
 
-Single sub-property:
+Single method value:
 
 	assertThat(actual, hasValue(on(Person.class).getName(), equalTo("x")));
 	
-Multiple sub-properties:
+Multiple method values:
 
 	assertThat(actual, allOf(
 		hasValue(on(Person.class).getName(), equalTo("x")),
 		hasValue(on(Person.class).getAge(), equalTo(1))
 	));
 
-Nested sub-properties:
+Nested method value:
 
 	assertThat(actual, hasValue(on(Person.class).getAddress(),
 		hasValue(on(Address.class).getCity(), equalTo("x"))
