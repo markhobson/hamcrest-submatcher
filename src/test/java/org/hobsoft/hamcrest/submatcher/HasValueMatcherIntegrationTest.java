@@ -22,17 +22,17 @@ import org.junit.Test;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
-import static org.hobsoft.hamcrest.submatcher.Submatcher.hasValue;
-import static org.hobsoft.hamcrest.submatcher.Submatcher.on;
+import static org.hobsoft.hamcrest.submatcher.HasValueMatcher.hasValue;
+import static org.hobsoft.hamcrest.submatcher.HasValueMatcher.on;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 /**
- * Tests {@code Submatcher} using the {@code Matcher} API.
+ * Tests {@code HasValueMatcher} using the {@code Matcher} API.
  */
-public class SubmatcherIntegrationTest
+public class HasValueMatcherIntegrationTest
 {
 	// ----------------------------------------------------------------------------------------------------------------
 	// fields

@@ -29,7 +29,7 @@ import static org.hobsoft.hamcrest.submatcher.Preconditions.checkNotNull;
  * @param <U>
  *            the sub-property type
  */
-public class Submatcher<T, U> extends TypeSafeDiagnosingMatcher<T>
+public class HasValueMatcher<T, U> extends TypeSafeDiagnosingMatcher<T>
 {
 	// ----------------------------------------------------------------------------------------------------------------
 	// fields
@@ -43,7 +43,7 @@ public class Submatcher<T, U> extends TypeSafeDiagnosingMatcher<T>
 	// constructors
 	// ----------------------------------------------------------------------------------------------------------------
 
-	Submatcher(MethodInvocation invocation, Matcher<U> submatcher)
+	HasValueMatcher(MethodInvocation invocation, Matcher<U> submatcher)
 	{
 		this.invocation = checkNotNull(invocation, "invocation");
 		this.submatcher = checkNotNull(submatcher, "submatcher");
@@ -100,7 +100,7 @@ public class Submatcher<T, U> extends TypeSafeDiagnosingMatcher<T>
 	// public methods
 	// ----------------------------------------------------------------------------------------------------------------
 
-	public static <T, U> Submatcher<T, U> hasValue(U on, Matcher<U> submatcher)
+	public static <T, U> HasValueMatcher<T, U> hasValue(U on, Matcher<U> submatcher)
 	{
 		checkNotNull(submatcher, "submatcher");
 		
@@ -111,7 +111,7 @@ public class Submatcher<T, U> extends TypeSafeDiagnosingMatcher<T>
 		
 		MethodInvocation invocation = SpyHolder.getSpy().getInvocation();
 		
-		return new Submatcher<T, U>(invocation, submatcher);
+		return new HasValueMatcher<T, U>(invocation, submatcher);
 	}
 	
 	public static <T> T on(Class<T> type)
