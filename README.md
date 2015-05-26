@@ -3,6 +3,8 @@ Hamcrest Submatcher
 
 Type-safe Hamcrest matcher for method values.
 
+**Note: This library has been superseded by [Hamcrest Compose](https://github.com/markhobson/hamcrest-compose) for Java 8.**
+
 Usage
 -----
 
