@@ -1,4 +1,4 @@
-hamcrest-submatcher
+Hamcrest Submatcher
 ===================
 
 Type-safe Hamcrest matcher for method values.
